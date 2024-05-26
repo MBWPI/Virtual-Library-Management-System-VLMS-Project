@@ -59,8 +59,11 @@ Deliverables
 3.    Project Report: A comprehensive document covering system design, implementation details, testing strategy, user manual, and team member contributions.
 
 Implementation Notes
+
 •    Security Considerations: While in-depth security practices like password hashing may be beyond this project's scope, emphasize their importance in the documentation.
+
 •    Data Storage: Use simple file handling (e.g., text or JSON files) for storing user and book data. This simplifies the project's complexity while teaching fundamental data management concepts.
+
 •    Role Management: Ensure the system distinguishes between standard users and administrators, granting appropriate access and functionalities based on the user's role.
  
 For this Week 4 Assignment, submit a rough Project Plan, that shows the Tasks and assignments.  This should be in a Gantt Chart format.  Use Microsoft Project or ProjectLibre links to an external site. to do so 
