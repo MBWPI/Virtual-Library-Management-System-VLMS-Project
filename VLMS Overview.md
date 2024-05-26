@@ -15,8 +15,11 @@ o    Checkout Queue: Implement a Queue to manage the FIFO borrowing system.
 Project Components and Responsibilities
 
 •    User Interface & Navigation: Design a clear console interface for user interaction, including separate menus for logged-out users, standard users, and administrators.
+
 •    Book Management: Implement functionalities to add, remove, update, and search for books.
+
 •    User Account Management: Create a secure login and registration system, handling user data responsibly.
+
 •    Data Persistence: Ensure the system can save and retrieve library and user data between sessions.
 
 Feature Details
