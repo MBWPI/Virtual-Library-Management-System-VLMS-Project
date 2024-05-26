@@ -3,6 +3,7 @@ Virtual Library Management System (VLMS) Project Overview
 Objective: Develop a console-based application that simulates the core functionalities of a library management system, enabling operations such as book browsing, borrowing, and returning for users, alongside administrative controls for managing the library's catalog.
 
 Technical Requirements
+
 1.    Version Control: Utilize Git for source code management. The project should be hosted on a platform like GitHub to facilitate collaboration and version tracking.
 2.    Testing: Implement unit tests for individual components and integration tests for the system using C++ testing frameworks such as Google Test.
 3.    Documentation: Each team member is responsible for documenting their code and contributing to the project report, which will detail the system's design, implementation strategy, testing protocols, and usage instructions.
@@ -12,6 +13,7 @@ o    User Management: Use a Hash Map for fast access to user accounts.
 o    Checkout Queue: Implement a Queue to manage the FIFO borrowing system.
 
 Project Components and Responsibilities
+
 •    User Interface & Navigation: Design a clear console interface for user interaction, including separate menus for logged-out users, standard users, and administrators.
 •    Book Management: Implement functionalities to add, remove, update, and search for books.
 •    User Account Management: Create a secure login and registration system, handling user data responsibly.
