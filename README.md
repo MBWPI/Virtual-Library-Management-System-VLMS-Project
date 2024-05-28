@@ -6,4 +6,5 @@ Separated the main.cpp into separate headers and implementation files, making it
     ~ Michael Beland
 Testing
 
-~ M
+    ~ Michael Beland
+    
