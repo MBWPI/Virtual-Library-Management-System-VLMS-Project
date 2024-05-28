@@ -1,21 +1,5 @@
 # Virtual-Library-Management-System-VLMS-Project
 
-// Creates a new Git repository
-
-git init
-
-// Clones a repository with a git clone
-
-git remote add origin https://github.com/MBWPI/Virtual-Library-Management-System-VLMS-Project.git
-
-// Combined local unpublished changes with the latest remote published changes
-
-git pull --rebase origin main
-
-// Records changes made to the project, adds note "Updating"
-
-git commit -m 'Updating'
-
-// Integrates the changes to from the local repositories to remote repositories
-
-git push -u origin main
+Updated - 5/28/24
+Separated the main.cpp into separate headers and implementation files, making it more modular and easier to manage. Each header file declares the functions and classes, while the corresponding source file defines their implementations. The main.cpp file handles the initial setup and invokes the main menu.
+    ~ Michael Beland
