@@ -2,41 +2,41 @@
 #include <iostream>
 
 void searchBooks() {
-    std::cout << "Searching for books...\n";
+    std::cout << "\nSearching for books...\n";
 }
 
 void borrowBook() {
-    std::cout << "Borrowing a book...\n";
+    std::cout << "\nBorrowing a book...\n";
 }
 
 void returnBook() {
-    std::cout << "Returning a book...\n";
+    std::cout << "\nReturning a book...\n";
 }
 
 void viewBorrowedBooks() {
-    std::cout << "Viewing borrowed books...\n";
+    std::cout << "\nViewing borrowed books...\n";
 }
 
 void updateProfile() {
-    std::cout << "Updating profile...\n";
+    std::cout << "\nUpdating profile...\n";
 }
 
 void addBook() {
-    std::cout << "Adding a book...\n";
+    std::cout << "\nAdding a book...\n";
 }
 
 void removeBook() {
-    std::cout << "Removing a book...\n";
+    std::cout << "\nRemoving a book...\n";
 }
 
 void updateBookInfo() {
-    std::cout << "Updating book information...\n";
+    std::cout << "\nUpdating book information...\n";
 }
 
 void viewAllLoans() {
-    std::cout << "Viewing all loans...\n";
+    std::cout << "\nViewing all loans...\n";
 }
 
 void manageUsers() {
-    std::cout << "Managing users...\n";
+    std::cout << "\nManaging users...\n";
 }

@@ -12,6 +12,10 @@ git remote add origin https://github.com/MBWPI/Virtual-Library-Management-System
 
 git pull --rebase origin main
 
+// Adds changes in the working directory to the staging area
+
+git add .
+
 // Records changes made to the project, adds note "Updating"
 
 git commit -m 'Updating'
