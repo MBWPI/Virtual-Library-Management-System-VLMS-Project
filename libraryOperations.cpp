@@ -5,9 +5,9 @@
 #include <vector>
 #include <sstream>
 
-std::string readLastLine(const std::string filename) {
-    std::ifstream file(filename);
-    std::string lastLine, line;
+std::string readLastLine(const std::string filename) { // this grabs the last line of the database allowing me to generate the id, this can be manipulated to use in other functions, just keep this the same copy/paste if needed
+    std::ifstream file(filename); // opens file
+    std::string lastLine, line; 
 
     while (std::getline(file, line)) {
         lastLine = line;
@@ -38,17 +38,17 @@ void updateProfile() {
 
 void addBook(std::string book_title, std::string book_type,std::string book_subject,std::string book_desc,std::string book_genre,std::string book_author,std::string book_page_count,std::string book_release_year) {
 
-    std::fstream book_database("database/book_database.txt");
-    int book_id, rented = 0;
-    char renter = ' ';
+    std::fstream book_database("database/book_database.txt"); // opens database
+    int book_id, rented = 0; // book_id is generated based of what was the last id + 1, default rented status 0
+    char renter = ' '; // default renter null
 
     int counter = 0;
     if (book_database.is_open()) { //checks last line and grabs data of the last book added
         
         std::string last_line = readLastLine("database/book_database.txt"); //grabs last line and stores it in to var
-        std::getline(book_database, last_line);
-        std::vector<std::string> last_book_entered;
-        std::stringstream ss(readLastLine("database/book_database.txt"));
+        std::getline(book_database, last_line); // grabs line of databse
+        std::vector<std::string> last_book_entered; // creates a vector for that line
+        std::stringstream ss(readLastLine("database/book_database.txt")); // puts the line into the vector
         std::string token;
 
 
@@ -60,17 +60,17 @@ void addBook(std::string book_title, std::string book_type,std::string book_subj
         }
 
         book_id = stoi(last_book_entered[9]); // adds 1 to book id
-        book_id++;
-        std::string lbreak = " - ";
-        book_database.close();
+        book_id++; // makes id
+        std::string lbreak = " - "; //This is the identifier for the separation of data in the database
+        book_database.close(); // for some reason, it only works if I close the database and reopen it in app status 
         std::fstream book_database;
         book_database.open("database/book_database.txt", std::ios::app);
         book_database << std::endl << "- " << book_title << lbreak << book_author << lbreak << book_page_count << lbreak << book_subject << lbreak << book_genre << lbreak << book_release_year << lbreak << book_type << lbreak <<  book_desc << lbreak << book_id << lbreak << rented << lbreak << renter;  
-        book_database.close();
-        std::cout << "\nAdding a book...\n";
+        book_database.close(); // gota close it again
+        std::cout << "\nAdding a book...\n"; // shows user the book they added
         std::cout << "Book ID: " <<  book_id << std::endl << "Book Title: " << last_book_entered[1] << std::endl << "Book Author: " << book_author << std::endl << "Page Count: " << book_page_count << std::endl << "Subject: " << book_subject << std::endl << "Genre: " << book_genre << std::endl << "Release Year: " << book_release_year << std::endl << "Format: " << book_type << "Book Desc:" << book_desc << std::endl;    
     }else {
-        std::cout << "error";
+        std::cout << "error"; // if failed to open the database file
     }
 
 
