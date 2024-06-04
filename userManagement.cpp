@@ -2,6 +2,7 @@
 #include "menu.h"
 #include <iostream>
 #include <limits>
+#include <vector>
 
 std::unordered_map<std::string, User> users;
 
@@ -10,36 +11,35 @@ void clearInput() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-void login() {
+void login(Users &users) {
     std::string username, password;
-    std::cout << "Username: ";
+    std::cout << "\nUsername: ";
     std::cin >> username;
     std::cout << "Password: ";
     std::cin >> password;
 
-    if (users.find(username) != users.end() && users[username].password == password) {
-        if (users[username].role == "admin") {
+        if (users.login(username, password)) {
+        if (users.getUser(username).getRole() == "admin") {
             adminMenu();
         } else {
             userMenu(username);
         }
     } else {
-        std::cout << "Invalid username or password.\n";
+        std::cout << "\nInvalid username or password.\n";
     }
 }
 
-void registerUser() {
+void registerUser(Users &users) {
     std::string username, password;
-    std::cout << "Enter new username: ";
+    std::cout << "\nEnter new username: ";
     std::cin >> username;
     std::cout << "Enter new password: ";
     std::cin >> password;
 
-    if (users.find(username) == users.end()) {
-        users[username] = User(username, password, "user");
-        std::cout << "Registration successful!\n";
+    if (!users.userExists(username)) {
+        users.registerUser(User(username, password, "user"));
+        std::cout << "\nRegistration successful!\n";
     } else {
-        std::cout << "Username already exists.\n";
+        std::cout << "\nUsername already exists.\n";
     }
 }
-

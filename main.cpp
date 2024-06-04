@@ -13,10 +13,13 @@
 #include "userManagement.h"
 
 int main() {
+    Users users;
+    
     // Prepopulate some users for testing
-    users["admin"] = User("admin", "admin", "admin");
-    users["user1"] = User("user1", "password", "user");
+    users.registerUser(User("admin", "admin", "admin"));
+    users.registerUser(User("user1", "password", "user"));
 
-    preLoginMenu();
+    preLoginMenu(users);
     return 0;
+
 }

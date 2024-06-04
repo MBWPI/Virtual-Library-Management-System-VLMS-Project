@@ -4,7 +4,7 @@
 #include <iostream>
 #include <limits>
 
-void preLoginMenu() {
+void preLoginMenu(Users &users) {
     int choice;
     do {
         std::cout << "\nWelcome to the Virtual Library Management System\n";
@@ -13,7 +13,6 @@ void preLoginMenu() {
         std::cout << "2. Register\n";
         std::cout << "3. Exit\n";
         std::cout << "\nPlease select an option: ";
-
         // Validate user input
         if (!(std::cin >> choice)) {
             std::cin.clear(); // clear the error flag
@@ -24,10 +23,10 @@ void preLoginMenu() {
         
         switch (choice) {
             case 1:
-                login();
+                login(users);
                 break;
             case 2:
-                registerUser();
+                registerUser(users);
                 break;
             case 3:
                 std::cout << "\nGoodbye!\n";
@@ -84,6 +83,7 @@ void userMenu(const std::string &username) {
         }
     } while (choice != 6);
 }
+
 
 void adminMenu() {
     int choice;
