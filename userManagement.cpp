@@ -42,3 +42,4 @@ void registerUser() {
         std::cout << "Username already exists.\n";
     }
 }
+
