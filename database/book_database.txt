@@ -1,1 +1,1 @@
-- Book Title - Book Author - Book Pages - Book Subject - Book Genre - Book Release Year - Book Type - Book Desc - 1 -
+- Book Title - Book Author - Book Pages - Book Subject - Book Genre - Book Release Year - Book Type - Book Desc - 1 - rented - renter
