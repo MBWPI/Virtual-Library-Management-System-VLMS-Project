@@ -170,42 +170,6 @@ std::vector<Book> searchBooks(std::string filename, std::string bookTitle) {
     return foundBooks;
 }
 
-void regUser(std::string username, std::string password, std::string fullName, std::string birthDate) {
-
-    std::fstream user_database("database/user_data.txt");
-    int user_id;
-
-    if (user_database.is_open()) { //checks last line and grabs data of the last book added
-        
-        std::string last_line = readLastLine("database/user_data.txt"); //grabs last line and stores it in to var
-        std::getline(user_database, last_line);
-        std::vector<std::string> last_book_entered;
-        std::stringstream ss(readLastLine("database/user_data.txt"));
-        std::string token;
-
-        int counter = 0;
-        while(getline(ss, token, '-')) {  //stores each line minus the '-' into an array
-            token.erase(0, token.find_first_not_of(" ")); // Trim leading spaces
-            token.erase(token.find_last_not_of(" ") + 1); // Trim trailing spaces
-            last_book_entered.push_back(token);    
-            counter++;            
-        }
-
-        user_id = stoi(last_book_entered[1]); // adds 1 to book id
-        user_id++;
-        std::string lbreak = " - ";
-        user_database.close();
-        std::fstream book_database;
-        book_database.open("database/user_data.txt", std::ios::app);
-        book_database << "\n- " << user_id << lbreak << username << lbreak << password << lbreak << fullName << lbreak << birthDate << lbreak;
-        book_database.close();
-    }else {
-        std::cout << "error";
-    }
-
-
-}
-
 void borrowBook() {
     std::cout << "\nBorrowing a book...\n";
 }
@@ -573,7 +537,7 @@ user parseUserLine(const std::string& line) {
 }
 
 // Function to perform binary search on a vector of books
-int Search(const std::vector<user>& user, const std::string& title) {
+int SearchUs(const std::vector<user>& user, const std::string& title) {
     int left = 0, right = user.size() - 1;
     while (left <= right) {
         int mid = left + (right - left) / 2;
@@ -634,7 +598,7 @@ std::vector<user> searchUsers(std::string filename, std::string logged_in_user) 
 
     std::vector<user> foundBooks;
 
-    int index = Search(users, searchTitle);
+    int index = SearchUs(users, searchTitle);
 
     if (index != -1) {
         // Correctly handle reading the previous line
@@ -643,9 +607,53 @@ std::vector<user> searchUsers(std::string filename, std::string logged_in_user) 
         }
         const user& founduser = users[index];
         foundBooks.push_back(founduser);
+    } else {
+        std::cerr << "Username does not exist" << std::endl;
     }
 
     return foundBooks;
+}
+
+bool searchUsersExist(std::string filename, std::string logged_in_user) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return false;
+    }
+
+    std::vector<user> users;
+    std::string line;
+
+    while (std::getline(file, line)) {
+        if (!line.empty()) {
+            users.push_back(parseUserLine(line));
+        }
+    }
+
+    file.close();
+
+    // Sort the users by username for binary search
+    std::sort(users.begin(), users.end());
+
+    auto trim = [](std::string &str) {
+        size_t first = str.find_first_not_of(' ');
+        size_t last = str.find_last_not_of(' ');
+        if (first == std::string::npos || last == std::string::npos) {
+            str = "";
+        } else {
+            str = str.substr(first, (last - first + 1));
+        }
+    };
+
+    std::string searchUsername = logged_in_user;
+    trim(searchUsername);
+
+    user searchUser{0, searchUsername, "", "", ""};
+
+    // Binary search to check if the username exists in the sorted list
+    bool found = std::binary_search(users.begin(), users.end(), searchUser);
+
+    return found;
 }
 
 void updateProfileInfo(std::string filename, user updatedUser) {
@@ -781,4 +789,86 @@ void updateUser(std::string filename, std::string loggedInUser) {
     updateProfileInfo(filename, userFound);
 
     std::cout << "User Information Update Successfully!\n";
+}
+
+void regUser(std::string username, std::string password, std::string fullName, std::string birthDate) {
+
+    std::fstream user_database("database/user_data.txt");
+    int user_id;
+
+    if (user_database.is_open()) { //checks last line and grabs data of the last book added
+        
+        std::string last_line = readLastLine("database/user_data.txt"); //grabs last line and stores it in to var
+        std::getline(user_database, last_line);
+        std::vector<std::string> last_book_entered;
+        std::stringstream ss(readLastLine("database/user_data.txt"));
+        std::string token;
+
+        int counter = 0;
+        while(getline(ss, token, '-')) {  //stores each line minus the '-' into an array
+            token.erase(0, token.find_first_not_of(" ")); // Trim leading spaces
+            token.erase(token.find_last_not_of(" ") + 1); // Trim trailing spaces
+            last_book_entered.push_back(token);    
+            counter++;            
+        }
+
+        user_id = stoi(last_book_entered[1]); // adds 1 to book id
+        user_id++;
+        std::string lbreak = " - ";
+        user_database.close();
+        std::fstream book_database;
+        book_database.open("database/user_data.txt", std::ios::app);
+        book_database << "\n- " << user_id << lbreak << username << lbreak << password << lbreak << fullName << lbreak << birthDate << lbreak;
+        book_database.close();
+    }else {
+        std::cout << "error";
+    }
+
+
+}
+
+void signUp(std::string username, std::string password, std::string fullName, std::string birthDate) {
+    
+    int loop = 0;
+    std::string newUsername = username;
+    while(loop == 0) {
+        if (searchUsersExist("database/user_data.txt", newUsername) == true) {
+            std::cout << "Error: Username already taken. Try again!" << std::endl;
+            std::cout << "Enter New Username: ";
+            std::getline(std::cin, newUsername);
+        } else {
+            std::cout << "Registered!" << std::endl;
+            regUser(newUsername, password, fullName, birthDate);
+            loop = 1;
+        }
+    }
+
+}
+
+std::string logIn() {
+    int loop = 0;
+    std::string username;
+    std::string password;
+
+   while(loop == 0) {  
+        std::cout << "\nUsername: ";
+        std::getline(std::cin, username);
+        std::cout << "\nPassword: ";
+        std::cin >> password;
+    
+        if (searchUsersExist("database/user_data.txt", username) == false ){
+            std::cout << "Error: User Does not Exisit";
+        }else {
+        
+            std::vector result = searchUsers("database/user_data.txt", username);
+            if (username == result[0].username && password == result[0].password) {
+                std::cout << "\nLogged In!" << std::endl;
+                loop = 1;
+                return username;
+            }else {
+                std::cout << "\nLoggin Failed" << std::endl;
+            }
+        }
+    }
+    
 }
