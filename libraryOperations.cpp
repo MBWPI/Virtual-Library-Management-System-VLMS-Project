@@ -1,4 +1,4 @@
-#include "libraryOperations.h"
+#include "functions.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -170,6 +170,42 @@ std::vector<Book> searchBooks(std::string filename, std::string bookTitle) {
     return foundBooks;
 }
 
+void regUser(std::string username, std::string password, std::string fullName, std::string birthDate) {
+
+    std::fstream user_database("database/user_data.txt");
+    int user_id;
+
+    if (user_database.is_open()) { //checks last line and grabs data of the last book added
+        
+        std::string last_line = readLastLine("database/user_data.txt"); //grabs last line and stores it in to var
+        std::getline(user_database, last_line);
+        std::vector<std::string> last_book_entered;
+        std::stringstream ss(readLastLine("database/user_data.txt"));
+        std::string token;
+
+        int counter = 0;
+        while(getline(ss, token, '-')) {  //stores each line minus the '-' into an array
+            token.erase(0, token.find_first_not_of(" ")); // Trim leading spaces
+            token.erase(token.find_last_not_of(" ") + 1); // Trim trailing spaces
+            last_book_entered.push_back(token);    
+            counter++;            
+        }
+
+        user_id = stoi(last_book_entered[1]); // adds 1 to book id
+        user_id++;
+        std::string lbreak = " - ";
+        user_database.close();
+        std::fstream book_database;
+        book_database.open("database/user_data.txt", std::ios::app);
+        book_database << "\n- " << user_id << lbreak << username << lbreak << password << lbreak << fullName << lbreak << birthDate << lbreak;
+        book_database.close();
+    }else {
+        std::cout << "error";
+    }
+
+
+}
+
 void borrowBook() {
     std::cout << "\nBorrowing a book...\n";
 }
@@ -180,10 +216,6 @@ void returnBook() {
 
 void viewBorrowedBooks() {
     std::cout << "\nViewing borrowed books...\n";
-}
-
-void updateProfile() {
-    std::cout << "\nUpdating profile...\n";
 }
 
 void addBook(std::string book_title, std::string book_type,std::string book_subject,std::string book_desc,std::string book_genre,std::string book_author,std::string book_page_count,std::string book_release_year) {
@@ -346,7 +378,7 @@ void updateBook(std::string filename, std::string BookToUpdate) {
         }
     }
 
-    // no idea how to convert the array to be able to use result[1], result[2].... I cant remeber how I event set it up 
+    // no idea how to convert the array to be able to use result[1], result[2]
     std::string y_n = " ";
     std::cout << "Would you like to update title:  " << Found_Book.title << "? <Y/N> ";
     std::cin >> y_n;
@@ -491,4 +523,262 @@ void viewAllLoans() {
 
 void manageUsers() {
     std::cout << "\nManaging users...\n";
+}
+
+// Struct to hold book information
+struct user {
+    int id;
+    std::string username;
+    std::string password;
+    std::string fullName;
+    std::string dob;
+
+    // For sorting and comparison
+    bool operator<(const user& other) const {
+        return username < other.username;
+    }
+};
+
+// Function to parse a line from the file into a Book struct
+user parseUserLine(const std::string& line) {
+    std::stringstream ss(line);
+    user  users;
+    std::string temp;
+
+    std::getline(ss, temp, '-'); // Ignore the initial -
+    ss >> users.id;
+    std::getline(ss, temp, '-'); // Ignore the -
+    std::getline(ss, users.username, '-');
+    std::getline(ss, users.password, '-');
+    std::getline(ss, users.fullName, '-');
+    std::getline(ss, users.dob, '-');
+
+    // Trim whitespace from each field
+    auto trim = [](std::string &str) {
+        size_t first = str.find_first_not_of(' ');
+        size_t last = str.find_last_not_of(' ');
+        if (first == std::string::npos || last == std::string::npos) {
+            str = "";
+        } else {
+            str = str.substr(first, (last - first + 1));
+        }
+    };
+
+    trim(users.username);
+    trim(users.password);
+    trim(users.fullName);
+    trim(users.dob);
+
+    return users;
+}
+
+// Function to perform binary search on a vector of books
+int Search(const std::vector<user>& user, const std::string& title) {
+    int left = 0, right = user.size() - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        // Trim whitespace before comparison
+        std::string trimmedSearchTitle = title;
+        trim(trimmedSearchTitle); 
+        std::string trimmedBookTitle = user[mid].username; 
+        trim(trimmedBookTitle);
+
+        if (trimmedBookTitle == trimmedSearchTitle) {
+            return mid;
+        } else if (trimmedBookTitle < trimmedSearchTitle) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+    return -1; // Book not found
+}
+
+std::vector<user> searchUsers(std::string filename, std::string logged_in_user) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return {}; // Return an empty vector if file opening fails
+    }
+
+    std::vector<user> users;
+    std::string line;
+
+    while (std::getline(file, line)) {
+        if (!line.empty()) {
+            users.push_back(parseUserLine(line));
+        }
+    }
+
+    file.close();
+
+    // Sort the books by title for binary search
+    std::sort(users.begin(), users.end());
+
+    std::string searchTitle = logged_in_user;
+    // Trim the searchTitle to remove leading/trailing whitespace
+    auto trim = [](std::string &str) {
+        size_t first = str.find_first_not_of(' ');
+        size_t last = str.find_last_not_of(' ');
+        if (first == std::string::npos || last == std::string::npos) {
+            str = "";
+        } else {
+            str = str.substr(first, (last - first + 1));
+        }
+    };
+
+    trim(searchTitle);
+
+    // Add a space to the beginning and end of the searchTitle
+    searchTitle = " " + searchTitle + " ";
+
+    std::vector<user> foundBooks;
+
+    int index = Search(users, searchTitle);
+
+    if (index != -1) {
+        // Correctly handle reading the previous line
+        if (index > 0) {
+            index--;
+        }
+        const user& founduser = users[index];
+        foundBooks.push_back(founduser);
+    }
+
+    return foundBooks;
+}
+
+void updateProfileInfo(std::string filename, user updatedUser) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return;
+    }
+
+    std::vector<user> users;
+    std::string line;
+
+    while (std::getline(file, line)) {
+        if (!line.empty()) {
+            users.push_back(parseUserLine(line));
+        }
+    }
+
+    file.close();
+
+    // Find and update the book
+    bool userFound = false;
+    for (auto& user : users) {
+        if (user.id == updatedUser.id) {
+            user = updatedUser;
+            userFound = true;
+            break;
+        }
+    }
+
+    if (!userFound) {
+        std::cerr << "Book with ID " << updatedUser.id << " not found." << std::endl;
+        return;
+    }
+
+    // Write the updated books back to the file, ignoring blank lines
+    std::ofstream outFile(filename);
+    if (!outFile.is_open()) {
+        std::cerr << "Failed to open the file for writing." << std::endl;
+        return;
+    }
+
+    for (const auto& user : users) {
+        outFile << "- " << user.id << " - " << user.username << " - " << user.password << " - " << user.fullName << " - " << user.dob << " - " << std::endl;
+    }
+
+    outFile.close();
+}
+
+void updateUser(std::string filename, std::string loggedInUser) {
+    std::cout << "\nUpdating user information...\n";
+
+    std::vector result = searchUsers(filename, loggedInUser);
+    user& userFound = result[0];
+    
+    // Check if any books were found
+    if (!result.empty()) {
+        std::cout << "USer to Update:" << std::endl;
+        for (const auto& user : result) {
+            // Access and use the data of each found book
+            std::cout << "Username: " << user.username << std::endl;
+            std::cout << "Password: " << user.password << std::endl;
+            std::cout << "Full Name: " << user.fullName << std::endl;
+            std::cout << "Date Of Birth: " << user.dob << std::endl;
+        }
+    }
+
+    // no idea how to convert the array to be able to use result[1], result[2]
+    std::string y_n = " ";
+    std::cout << "Would you like to update username:  " << userFound.username << "? <Y/N> ";
+    std::cin >> y_n;
+    if(y_n == "Y" || y_n == "y") {
+        std::string update;
+        std::cout << "Update to: ";
+        std::cin.ignore();
+        std::getline(std::cin, update);
+        userFound.username = update;
+        std:: cout << std::endl;
+    }else if (y_n == "n" || y_n == "N") {
+        std::cout << "No Update.\n";
+    } else {
+        std::cout << "Invalid Input!";
+    }
+
+    std::cout << "Would you like to update password: " << userFound.password << "? <Y/N> ";
+    std::cin >> y_n;
+    if(y_n == "Y" || y_n == "y") {
+        std::string update;
+        std::cout << "Update to: ";
+        std::cin.ignore();
+        std::getline(std::cin, update);
+        userFound.password = update;
+        std:: cout << std::endl;
+    }else if (y_n == "n" || y_n == "N") {
+        std::cout << "No Update.\n";
+    } else {
+        std::cout << "Invalid Input!";
+        std:: cout << std::endl;
+    }
+
+    std::cout << "Would you like to update full name: " << userFound.fullName << "? <Y/N> ";
+    std::cin >> y_n;
+    if(y_n == "Y" || y_n == "y") {
+        std::string update;
+        std::cout << "Update to: ";
+        std::cin.ignore();
+        std::getline(std::cin, update);
+        userFound.fullName = update;
+        std:: cout << std::endl;
+    }else if (y_n == "n" || y_n == "N") {
+        std::cout << "No Update.\n";
+    } else {
+        std::cout << "Invalid Input!";
+        std:: cout << std::endl;
+    }
+
+    std::cout << "Would you like to update full name: " << userFound.dob << "? <Y/N> ";
+    std::cin >> y_n;
+    if(y_n == "Y" || y_n == "y") {
+        std::string update;
+        std::cout << "Update to: ";
+        std::cin.ignore();
+        std::getline(std::cin, update);
+        userFound.dob = update;
+        std:: cout << std::endl;
+    }else if (y_n == "n" || y_n == "N") {
+        std::cout << "No Update.\n";
+    } else {
+        std::cout << "Invalid Input!";
+        std:: cout << std::endl;
+    }
+
+    updateProfileInfo(filename, userFound);
+
+    std::cout << "User Information Update Successfully!\n";
 }
