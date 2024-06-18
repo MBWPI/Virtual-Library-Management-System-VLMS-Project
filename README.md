@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository contains the first iteration of our project. The current version features a user interface (UI) developed by the UI team, consisting of Michael Beland and Jonathan Jones.
+This repository contains the first iteration of our project. This version features a user interface (UI) developed by the UI team, consisting of Michael Beland and Jonathan Jones.
 
 ## Features
 
