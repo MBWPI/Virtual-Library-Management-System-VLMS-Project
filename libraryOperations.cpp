@@ -905,3 +905,44 @@ bool isAdminVector(std::string logged_in_user, std::vector<std::string> adminLis
 
     return false;
 }
+static const std::vector<std::string> admins = { "esting2" , " "};
+
+void adminRemoveUser(std::string filename, std::string logged_in_user, std::string check_admin_type, std::string userToDelete) {
+    if (check_admin_type == "Text") {
+        if(isAdminTxt("database/admin_users.txt", logged_in_user) == true) {
+            removeUser(filename, userToDelete);
+        }else {
+            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
+        }
+    }else if (check_admin_type == "Vector") {
+        if(isAdminVector(filename, admins) == true) {
+            removeUser(filename, userToDelete);
+        }else {
+            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
+        }
+    } else {
+        std::cerr << "Invalid Check Type: Try again with 'Text' or 'Vector'" << std::endl;
+    }
+
+
+}
+
+void adminUpdateUser(std::string filename, std::string logged_in_user, std::string check_admin_type, std::string userToUpdate) {
+    if (check_admin_type == "Text") {
+        if(isAdminTxt("database/admin_users.txt", logged_in_user) == true) {
+            updateUser(filename, userToUpdate);
+        }else {
+            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
+        }
+    }else if (check_admin_type == "Vector") {
+        if(isAdminVector(filename, admins) == true) {
+            updateUser(filename, userToUpdate);
+        }else {
+            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
+        }
+    } else {
+        std::cerr << "Invalid Check Type: Try again with 'Text' or 'Vector'" << std::endl;
+    }
+
+
+}
