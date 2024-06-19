@@ -870,5 +870,38 @@ std::string logIn() {
             }
         }
     }
+    return username;
+}
+
+bool isAdminTxt(std::string filename, std::string logged_in_user) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return false;
+    }
+
+    int offset;
+    std::string line;
     
+    while (!file.eof()) {
+        std::getline(file, line);
+        if ((offset = line.find(logged_in_user, 0)) != std::string::npos) {
+            file.close();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return false;
+}
+
+bool isAdminVector(std::string logged_in_user, std::vector<std::string> adminList) {
+    if (std::find(adminList.begin(), adminList.end(), logged_in_user) != adminList.end()) {
+        return true;
+    }else {
+        return false;
+    }
+
+    return false;
 }
