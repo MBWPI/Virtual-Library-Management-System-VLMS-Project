@@ -171,10 +171,90 @@ std::vector<Book> searchBooks(std::string filename, std::string bookTitle) {
 }
 
 void borrowBook() {
+    std::string borrowed;
+    
+    std::string bookTitle;
+    
+    std::string loggedInUser;
+    
+    bool confirmBorrow;
+    
+    std::fstream book_database("database/book_database.txt");
+    
+    std::cout << "Enter a book: " << std::endl;
+    
+    
+    std::cin >> bookTitle;
+    
+    std::vector result = searchBooks(filename, bookTitle);
+    Book& Found_Book = result[0];
+    
+    if (Found_Book.rented == true){
+        std::cout << "Book has already been borrowed";
+    }
+    
+    else{
+        std::cout << "Do you want to borrow this book: " << std::endl;
+        
+        std::cin >> confirmBorrow;
+    }
+    
     std::cout << "\nBorrowing a book...\n";
+    
+    if (confirmBorrow == true){
+        Found_Book.rented = true;
+        Found_Book.renter = loggedInUser;
+    }
+    
+    else{
+        std::cout << "Error" << std::endl;
+    }
+    
 }
 
 void returnBook() {
+    std::string borrowed;
+
+    std::string returned;
+    
+    std::string bookTitle;
+    
+    std::string borrowedUser;
+    
+    std::string loggedInUser;
+    
+    bool confirmReturn;
+    
+    bool confirmBorrow;
+    
+    std::fstream book_database("database/book_database.txt");
+    
+    std::cout << "Enter the book you'd like to return: " << std::endl;
+    
+    std::cin >> bookTitle;
+    
+    std::vector result = searchBooks(filename, bookTitle);
+    Book& Found_Book = result[0];
+    
+    std::cout << "\nReturning a book...\n";
+    
+    if (Found_Book.rented == true){
+        if (loggedInUser == borrowedUser){
+            std::cout << "Do you want to return this book: " << std::endl;
+            
+            std::cin >> confirmReturn;
+            
+            if(confirmReturn == true){
+                Found_Book.rented = false;
+                loggedInUser != Found_Book.renter;
+            }
+        }
+    }
+    
+    else{
+        std::cout << "Error" << std::endl;
+    }
+    
     std::cout << "\nReturning a book...\n";
 }
 
