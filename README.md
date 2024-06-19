@@ -1,14 +1,5 @@
 # Virtual-Library-Management-System-VLMS-Project
 
-Updated - 5/28/24
+Updated - 6/19/2024
 
-Separated the main.cpp into separate headers and implementation files, making it more modular and easier to manage. Each header file declares the functions and classes, while the corresponding source file defines their implementations. The main.cpp file handles the initial setup and invokes the main menu.
-
-    ~ Michael Beland
-    updated by Jon
-    
-testing - Jackson
-
-test by Ian
-test by fadi
-test by Rachel
+This virtual library management system allows admins to add/remove/update book information, manage users, and manage loaned books. This program also enables users to create accounts, log in to existing accounts, rent books, and view their loaned books. The program does not require an outside server. It is fully operatable within .txt databases. Admins have the choice to use hardcoded admin access or .txt databases. 
