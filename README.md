@@ -1,4 +1,4 @@
-# Virtual Library Management System (VLMS)
+# Virtual Library Management System (VLMS) - Version 3
 
 This version is the third iteration of the Virtual Library Management System project.
 
@@ -7,6 +7,8 @@ This version is the third iteration of the Virtual Library Management System pro
 ### User Account Management
 - Developed by the User Account Management team, led by Rachel Georges.
 - Includes features for login, user registration, and account management.
+
+## Features
 
 ### User Interface (UI)
 - The user interface was developed by the UI team, consisting of Michael Beland and Jonathan Jones.
@@ -39,29 +41,6 @@ To install and run the project locally:
     ```bash
     ./vlms
     ```
-
-## Contributing
-
-We welcome contributions from the community. To contribute, follow these steps:
-
-1. Fork the repository.
-2. Create a new branch:
-    ```bash
-    git checkout -b feature/your-feature-name
-    ```
-3. Make your changes and commit them:
-    ```bash
-    git commit -m "Add your commit message"
-    ```
-4. Push to the branch:
-    ```bash
-    git push origin feature/your-feature-name
-    ```
-5. Open a pull request on GitHub.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
 
