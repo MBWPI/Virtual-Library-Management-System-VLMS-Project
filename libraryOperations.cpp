@@ -170,98 +170,6 @@ std::vector<Book> searchBooks(std::string filename, std::string bookTitle) {
     return foundBooks;
 }
 
-void borrowBook() {
-    std::string borrowed;
-    
-    std::string bookTitle;
-    
-    std::string loggedInUser;
-    
-    bool confirmBorrow;
-    
-    std::fstream book_database("database/book_database.txt");
-    
-    std::cout << "Enter a book: " << std::endl;
-    
-    
-    std::cin >> bookTitle;
-    
-    std::vector result = searchBooks(filename, bookTitle);
-    Book& Found_Book = result[0];
-    
-    if (Found_Book.rented == true){
-        std::cout << "Book has already been borrowed";
-    }
-    
-    else{
-        std::cout << "Do you want to borrow this book: " << std::endl;
-        
-        std::cin >> confirmBorrow;
-    }
-    
-    std::cout << "\nBorrowing a book...\n";
-    
-    if (confirmBorrow == true){
-        Found_Book.rented = true;
-        Found_Book.renter = loggedInUser;
-    }
-    
-    else{
-        std::cout << "Error" << std::endl;
-    }
-    
-}
-
-void returnBook() {
-    std::string borrowed;
-
-    std::string returned;
-    
-    std::string bookTitle;
-    
-    std::string borrowedUser;
-    
-    std::string loggedInUser;
-    
-    bool confirmReturn;
-    
-    bool confirmBorrow;
-    
-    std::fstream book_database("database/book_database.txt");
-    
-    std::cout << "Enter the book you'd like to return: " << std::endl;
-    
-    std::cin >> bookTitle;
-    
-    std::vector result = searchBooks(filename, bookTitle);
-    Book& Found_Book = result[0];
-    
-    std::cout << "\nReturning a book...\n";
-    
-    if (Found_Book.rented == true){
-        if (loggedInUser == borrowedUser){
-            std::cout << "Do you want to return this book: " << std::endl;
-            
-            std::cin >> confirmReturn;
-            
-            if(confirmReturn == true){
-                Found_Book.rented = false;
-                loggedInUser != Found_Book.renter;
-            }
-        }
-    }
-    
-    else{
-        std::cout << "Error" << std::endl;
-    }
-    
-    std::cout << "\nReturning a book...\n";
-}
-
-void viewBorrowedBooks() {
-    std::cout << "\nViewing borrowed books...\n";
-}
-
 void addBook(std::string book_title, std::string book_type,std::string book_subject,std::string book_desc,std::string book_genre,std::string book_author,std::string book_page_count,std::string book_release_year) {
 
     std::fstream book_database("database/book_database.txt");
@@ -561,12 +469,45 @@ void updateBook(std::string filename, std::string BookToUpdate) {
     std::cout << "Book Information Update Successfully!\n";
 }
 
-void viewAllLoans() {
-    std::cout << "\nViewing all loans...\n";
+void borrowBook(std::string filename, std::string loggedInUser) {    
+    std::string confirmBorrow;
+    bool confirmBorrow_bool;
+    std::string bookTitle;
+    std::cout << "Enter a book: ";
+    std::cin >> bookTitle;
+    
+    std::vector result = searchBooks(filename, bookTitle);
+    Book& Found_Book = result[0];
+    
+    if (Found_Book.renter != ""){
+        std::cout << "Do you want to borrow this book (Yes/No): " ;
+        std::cin >> confirmBorrow;
+        if (confirmBorrow == "Yes" || confirmBorrow == "yes") {
+            confirmBorrow_bool = 1;
+        }else {
+            confirmBorrow_bool = 0;
+        }
+        std::cout << "\nBorrowing a book...\n";
+    
+        if (confirmBorrow_bool == true){
+            Found_Book.rented = true;
+            Found_Book.renter = loggedInUser;
+
+            updateBookInfo(filename, Found_Book);
+        }else{
+            std::cout << "Error" << std::endl;
+        }        
+    }else{
+        std::cout << "Book has already been borrowed";
+    }
 }
 
-void manageUsers() {
-    std::cout << "\nManaging users...\n";
+bool checkIfBookRented(std::string filename, std::string book) {
+    std::vector result = searchBooks(filename, book);
+
+    std::cout << result[0].rented << " " << result[0].renter << std::endl;
+
+    return false;
 }
 
 // Struct to hold book information
@@ -985,6 +926,57 @@ bool isAdminVector(std::string logged_in_user, std::vector<std::string> adminLis
 
     return false;
 }
+
+void removeUser(std::string filename, std::string user) {
+    std::ifstream inputFile(filename);
+
+    if (!inputFile.is_open()) {
+        std::cerr << "Failed to open the file." << std::endl;
+        return;
+    }
+
+    std::string tempFilename = "database/temp_file/temp.txt";
+    std::ofstream tempFile(tempFilename);
+
+    if(!tempFile.is_open()) {
+        std::cerr << "Failed to open temp file." << std::endl;
+        return;
+    }
+
+    std::string line;
+    std::string searchUser = " " + user + " ";
+    bool userFound = false;
+
+    while(std::getline(inputFile, line)) {
+        if(line.find(searchUser) != std::string::npos) {
+            userFound = true;
+            continue;
+        }
+        // Check if this line is not empty
+        if (!line.empty()) {
+            // Write the line to the temporary file
+            tempFile << line << std::endl;
+        }
+    }
+
+    inputFile.close();
+    tempFile.close();
+
+    if(userFound) {
+        if(std::remove(filename.c_str()) != 0) {
+            std::cerr << "Error deleting the original file." << std::endl;
+            return;
+        }
+        if(std::rename(tempFilename.c_str(), filename.c_str()) != 0) {
+            std::cerr << "Error renaming the temporary file." << std::endl;
+        }
+        std::cout << "User Deleted successfully." << std::endl;
+    }else {
+        std::cout << "User not found" << std::endl;
+        std::remove(tempFilename.c_str());
+    }
+}
+
 static const std::vector<std::string> admins = { "esting2" , " "};
 
 void adminRemoveUser(std::string filename, std::string logged_in_user, std::string check_admin_type, std::string userToDelete) {
@@ -1025,4 +1017,106 @@ void adminUpdateUser(std::string filename, std::string logged_in_user, std::stri
     }
 
 
+}
+
+void viewAllLoan(std::string filename) {
+    std::ifstream file(filename);
+    std::string line;
+
+    if (file.is_open()) {
+        std::cout << "\nViewing all loans...\n";
+        while (std::getline(file, line)) {
+            // Check if the line ends with " - -"
+            if (line.size() >= 4 && line.substr(line.size() - 4) != "  - ") {
+                std::cout << line << std::endl;
+            }
+        }
+        file.close();
+    } else {
+        std::cerr << "Unable to open file";
+    }
+}
+
+void returnBook(std::string filename, std::string loggedInUser) {
+    std::string bookTitle, confirmReturnAsk;
+    bool confirmReturn;
+    
+    bool confirmBorrow;
+    
+    std::cout << "Enter the book you'd like to return: ";
+    std::cin >> bookTitle;
+    
+    std::vector result = searchBooks(filename, bookTitle);
+    Book& Found_Book = result[0];
+    std::string borrowedUser = result[0].renter;
+    std::cout << "\nReturning a book...\n";
+   // if (loggedInUser == result[0].renter){
+        std::cout << "Do you want to return this book (Yes/No) ";
+            
+        std::cin >> confirmReturnAsk;
+            
+        if(confirmReturnAsk == "Yes" || confirmReturnAsk == "yes"){
+            Found_Book.rented = false;
+            Found_Book.renter = "";
+            updateBookInfo(filename, Found_Book);
+        }
+   // }else{
+   //     std::cout << "Error" << std::endl;
+   // }
+}
+
+void viewBorrowedBooks(std::string filename, std::string logged_in_user) {
+    std::ifstream file(filename);
+    std::string line;
+
+    if (file.is_open()) {
+        std::vector<Book> borrowedBooks;
+        while (std::getline(file, line)) {
+            if (!line.empty()) {
+                Book book = parseBookLine(line);
+                if (book.rented && book.renter == logged_in_user) {
+                    borrowedBooks.push_back(book);
+                }
+            }
+        }
+        file.close();
+
+        // Display borrowed books
+        if (borrowedBooks.empty()) {
+            std::cout << "No books borrowed by " << logged_in_user << ".\n";
+        } else {
+            std::cout << "Books borrowed by " << logged_in_user << ":\n";
+            for (const auto& book : borrowedBooks) {
+                std::cout << "ID: " << book.id << ", Title: " << book.title 
+                          << ", Author: " << book.author << ", Pages: " << book.pages 
+                          << ", Subject: " << book.subject << ", Genre: " << book.genre 
+                          << ", Release Year: " << book.release_year 
+                          << ", Type: " << book.type << ", Description: " << book.desc 
+                          << std::endl;
+            }
+        }
+    } else {
+        std::cerr << "Unable to open file: " << filename << std::endl;
+    }
+}
+
+void viewAllLoans(std::string filename, std::string logged_in_user, std::string admin_check_type, std::string admin_file) {
+
+    if (admin_check_type == "Text" || admin_check_type == "txt" || admin_check_type == "text") {
+        bool admin_status = isAdminTxt(admin_file, logged_in_user);
+        if (admin_status == true) {
+            viewAllLoan(filename);
+        }else {
+            std::cout << "Not Admin!";
+        }
+    }else if(admin_check_type == "Vector" || admin_check_type == "vector") {
+        bool admin_status = isAdminVector(logged_in_user, admins);
+        if (admin_status == true) {
+            viewAllLoan(filename);
+        }else {
+            std::cout << "Not Admin!";
+        }
+    } else {
+        std::cerr << "Unable to open file";
+    }
 }
