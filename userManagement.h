@@ -3,12 +3,11 @@
 
 #include <unordered_map>
 #include "user.h"
-#include <string>
 
 extern std::unordered_map<std::string, User> users;
 
 void clearInput();
-void login(Users &users);
-void registerUser(Users &users);
+void login();
+void registerUser();
 
 #endif // USERMANAGEMENT_H
