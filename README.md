@@ -1,4 +1,4 @@
-# Virtual Library Management System (VLMS)
+# Virtual Library Management System (VLMS) - Version 2
 
 ## Overview
 This is the second iteration of our Virtual Library Management System (VLMS) project. Our goal is to provide a comprehensive solution for managing a virtual library, including functionalities for user registration, book browsing, borrowing, returning, and administrative controls.
