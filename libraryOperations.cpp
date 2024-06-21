@@ -1,5 +1,4 @@
-#include "libaryOperations.h"
-#include "functions.h"
+#include "libraryOperations.h"
 #include <iostream>
 #include <fstream>
 #include <string>
