@@ -1,11 +1,11 @@
-- 1- Book Title - Book Author - Book Pages - Book Subject - Book Genre - Book Release Year - Book Type - Book Desc - rented - renter
-- 1 - The Catcher in the Rye - J.D. Salinger - 234 - Adolescence - Fiction - 1951 - Novel - A story about teenage angst and alienation - not rented -  - 
-- 1 - To Kill a Mockingbird - Harper Lee - 281 - Racial Injustice - Fiction - 1960 - Novel - A novel set in the American South, dealing with themes of racism and morality - not rented -  - 
-- 1 - Pride and Prejudice - Jane Austen - 279 - Social Class - Romance - 1813 - Novel - A classic novel exploring manners, upbringing, and marriage - not rented -  - 
-- 1 - The Great Gatsby - F. Scott Fitzgerald - 180 - The American Dream - Fiction - 1925 - Novel - A critique of the American Dream set in the Jazz Age - not rented -  - 
-- 1 - Moby - Dick - 0 -  -  - 1925 -  -  - not rented -  - 
-- 1 - War and Peace - Leo Tolstoy - 1225 - Historical Events - Historical Fiction - 1869 - Novel - A complex novel that chronicles the French invasion of Russia - not rented -  - 
-- 1 - The Odyssey - Homer - 541 - Epic Journey - Epic Poetry - 0 -  -  - not rented -  - 
-- 1 - Brave New World - Aldous Huxley - 268 - Dystopia - Science Fiction - 1932 - Novel - A dystopian society driven by technological advancements and government control - not rented -  - 
-- 1 - The Hobbit - J.R.R. Tolkien - 310 - Fantasy Adventure - Fantasy - 1937 - Novel - The journey of Bilbo Baggins in a world of magic and dragons - not rented -  - 
-- 2 - 1984 - George Orwell - 328 - Totalitarianism - Dystopian Fiction - 1949 - Novel - A depiction of a dystopian future under a totalitarian regime - not rented -  - 
+- 1 - The Catcher in the Rye - J.D. Salinger - 234 - Adolescence - Fiction - 1951 - Novel - A story about teenage angst and alienation -   - not rented - 
+- 1 - To Kill a Mockingbird - Harper Lee - 281 - Racial Injustice - Fiction - 1960 - Novel - A novel set in the American South, dealing with themes of racism and morality -   - not rented - 
+- 1 - Pride and Prejudice - Jane Austen - 279 - Social Class - Romance - 1813 - Novel - A classic novel exploring manners, upbringing, and marriage -   - not rented - 
+- 1 - The Great Gatsby - F. Scott Fitzgerald - 180 - The American Dream - Fiction - 1925 - Novel - A critique of the American Dream set in the Jazz Age -   - not rented - 
+- 1 - Moby - Dick - 0 -  -  - 1925 -  -  - not rented -  -  
+- 1 - War and Peace - Leo Tolstoy - 1225 - Historical Events - Historical Fiction - 1869 - Novel - A complex novel that chronicles the French invasion of Russia -   - not rented - 
+- 1 - The Odyssey - Homer - 541 - Epic Journey - Epic Poetry - 0 -  -  -   - not rented - 
+- 1 - Brave New World - Aldous Huxley - 268 - Dystopia - Science Fiction - 1932 - Novel - A dystopian society driven by technological advancements and government control -  -  not rented - 
+- 1 - The Hobbit - J.R.R. Tolkien - 310 - Fantasy Adventure - Fantasy - 1937 - Novel - The journey of Bilbo Baggins in a world of magic and dragons - esting2 - rented -
+- 2 - 1984 - George Orwell - 328 - Totalitarianism - Dystopian Fiction - 1949 - Novel - A depiction of a dystopian future under a totalitarian regime - esting2 - rented - 
+
