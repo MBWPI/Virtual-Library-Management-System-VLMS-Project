@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\CMakeFiles\01ab6097c5f313bbf7013c0e104f6c3c\RUN_TESTS_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{B3BD127B-E9F4-38A2-BADD-A18C670DB8FE}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

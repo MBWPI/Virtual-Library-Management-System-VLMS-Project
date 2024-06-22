@@ -8,3 +8,6 @@
 - 1 - Brave New World - Aldous Huxley - 268 - Dystopia - Science Fiction - 1932 - Novel - A dystopian society driven by technological advancements and government control -  -  not rented - 
 - 1 - The Hobbit - J.R.R. Tolkien - 310 - Fantasy Adventure - Fantasy - 1937 - Novel - The journey of Bilbo Baggins in a world of magic and dragons - esting2 - rented -
 - 2 - 1984 - George Orwell - 328 - Totalitarianism - Dystopian Fiction - 1949 - Novel - A depiction of a dystopian future under a totalitarian regime - esting2 - rented - 
+
+- 3 - 9 - 14 - 15 - 11 - 13 - 16 - 10 - 12 - renter - 0 - 
+- 4 - 9 - 14 - 15 - 11 - 13 - 16 - 10 - 12 - renter - 0 - 

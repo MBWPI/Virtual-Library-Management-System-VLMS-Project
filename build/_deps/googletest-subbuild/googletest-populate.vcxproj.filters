@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-mkdir.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-download.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-update.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-patch.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-configure.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-build.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-install.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\5677f5149009e0a5865a9b5f527c33d2\googletest-populate-test.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\fff68e677f88554712e6f96c9f7bd07b\googletest-populate-complete.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\732f29f928f397ff29fe1838b7eb5fe0\googletest-populate.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+    <CustomBuild Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-subbuild\CMakeFiles\googletest-populate" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{2FA7A986-AD4B-354A-BEEC-1652C7AC0B02}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

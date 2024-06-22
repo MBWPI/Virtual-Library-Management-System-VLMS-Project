@@ -1,4 +1,3 @@
-#include "functions.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -315,7 +314,7 @@ void updateBookInfo(std::string filename, Book updatedBook) { // allows admins t
 void updateBook(std::string filename, std::string BookToUpdate) { // ui for updating a book
     std::cout << "\nUpdating book information...\n";
 
-    std::vector result = searchBooks(filename, BookToUpdate);
+    std::vector<Book> result = searchBooks(filename, BookToUpdate);
     Book& Found_Book = result[0];
     
     // Check if any books were found
@@ -480,7 +479,7 @@ void borrowBook(std::string filename, std::string loggedInUser) {
     std::cout << "Enter a book: ";
     std::cin >> bookTitle;
     
-    std::vector result = searchBooks(filename, bookTitle);
+    std::vector<Book> result = searchBooks(filename, bookTitle);
     Book& Found_Book = result[0];
     
     if (Found_Book.renter != ""){
@@ -507,7 +506,7 @@ void borrowBook(std::string filename, std::string loggedInUser) {
 }
 
 bool checkIfBookRented(std::string filename, std::string book) {
-    std::vector result = searchBooks(filename, book);
+    std::vector<Book> result = searchBooks(filename, book);
 
     std::cout << result[0].rented << " " << result[0].renter << std::endl;
 
@@ -731,7 +730,7 @@ void updateProfileInfo(std::string filename, user updatedUser) { //allows admins
 void updateUser(std::string filename, std::string loggedInUser) { //ui for updateuser
     std::cout << "\nUpdating user information...\n";
 
-    std::vector result = searchUsers(filename, loggedInUser);
+    std::vector<user> result = searchUsers(filename, loggedInUser);
     user& userFound = result[0];
     
     // Check if any user were found
@@ -884,7 +883,7 @@ std::string logIn() { // login users
             std::cout << "Error: User Does not Exisit";
         }else {
         
-            std::vector result = searchUsers("database/user_data.txt", username); //searches for username 
+            std::vector<user> result = searchUsers("database/user_data.txt", username); //searches for username 
             if (username == result[0].username && password == result[0].password) { // checks if username is equal to password
                 std::cout << "\nLogged In!" << std::endl;
                 loop = 1; // closes loop
@@ -1047,7 +1046,7 @@ void returnBook(std::string filename, std::string loggedInUser) {
     std::cout << "Enter the book you'd like to return: ";
     std::cin >> bookTitle;
     
-    std::vector result = searchBooks(filename, bookTitle);
+    std::vector<Book> result = searchBooks(filename, bookTitle);
     Book& Found_Book = result[0];
     std::string borrowedUser = result[0].renter;
     std::cout << "\nReturning a book...\n";

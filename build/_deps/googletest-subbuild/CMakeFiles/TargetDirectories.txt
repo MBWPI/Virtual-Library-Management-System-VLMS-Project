@@ -1,0 +1,3 @@
+C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/CMakeFiles/googletest-populate.dir
+C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/CMakeFiles/ALL_BUILD.dir
+C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/CMakeFiles/ZERO_CHECK.dir

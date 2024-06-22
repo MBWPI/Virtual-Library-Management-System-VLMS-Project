@@ -1,0 +1,5 @@
+if(EXISTS "C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/UserLibraryTest[1]_tests.cmake")
+  include("C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/UserLibraryTest[1]_tests.cmake")
+else()
+  add_test(UserLibraryTest_NOT_BUILT UserLibraryTest_NOT_BUILT)
+endif()

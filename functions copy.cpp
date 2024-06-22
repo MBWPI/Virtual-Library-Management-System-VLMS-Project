@@ -592,7 +592,7 @@ std::vector<user> searchUsers(std::string filename, std::string logged_in_user) 
     // Add a space to the beginning and end of the searchTitle
     searchTitle = " " + searchTitle + " ";
 
-    std::vector<user> foundBooks;
+    std::vector<user> FoundUsers;
 
     int index = SearchUs(users, searchTitle);
 
@@ -602,12 +602,12 @@ std::vector<user> searchUsers(std::string filename, std::string logged_in_user) 
             index--;
         }
         const user& founduser = users[index];
-        foundBooks.push_back(founduser);
+        FoundUsers.push_back(founduser);
     } else {
         std::cerr << "Username does not exist" << std::endl;
     }
 
-    return foundBooks;
+    return FoundUsers;
 }
 
 bool searchUsersExist(std::string filename, std::string logged_in_user) {

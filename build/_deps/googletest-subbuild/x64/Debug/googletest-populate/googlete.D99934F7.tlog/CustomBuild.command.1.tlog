@@ -1,0 +1,164 @@
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-MKDIR.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-src
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-build
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/tmp
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-mkdir
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-DOWNLOAD.RULE
+setlocal
+cd C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/download-googletest-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/verify-googletest-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -P C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/extract-googletest-populate.cmake
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-download
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-UPDATE.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-update
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-PATCH.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-patch
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-CONFIGURE.RULE
+setlocal
+cd C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-configure
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-BUILD.RULE
+setlocal
+cd C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-build
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-INSTALL.RULE
+setlocal
+cd C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-install
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\5677F5149009E0A5865A9B5F527C33D2\GOOGLETEST-POPULATE-TEST.RULE
+setlocal
+cd C:\Users\hopki\OneDrive\Desktop\Reg_Project_Book_Managment\build\_deps\googletest-build
+if %errorlevel% neq 0 goto :cmEnd
+C:
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E echo_append
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-test
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\FFF68E677F88554712E6F96C9F7BD07B\GOOGLETEST-POPULATE-COMPLETE.RULE
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E make_directory C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/CMakeFiles/Debug
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/CMakeFiles/Debug/googletest-populate-complete
+if %errorlevel% neq 0 goto :cmEnd
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -E touch C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/Debug/googletest-populate-done
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKEFILES\732F29F928F397FF29FE1838B7EB5FE0\GOOGLETEST-POPULATE.RULE
+setlocal
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
+^C:\USERS\HOPKI\ONEDRIVE\DESKTOP\REG_PROJECT_BOOK_MANAGMENT\BUILD\_DEPS\GOOGLETEST-SUBBUILD\CMAKELISTS.TXT
+setlocal
+"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe" -SC:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild -BC:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild --check-stamp-file C:/Users/hopki/OneDrive/Desktop/Reg_Project_Book_Managment/build/_deps/googletest-subbuild/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
