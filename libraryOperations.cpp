@@ -20,9 +20,53 @@ void searchBooks() {
     
 }
 
-void borrowBook() {
+void borrowBook(UserManagement && userManager, BookDatabase && findBookByTitle){
     std::cout << "\nBorrowing a book...\n";
-}
+    // Load the book database
+    BookDatabase bookDb;
+    // Get the username from the user
+    std::string username;
+    std::cout << "\nEnter your username: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  
+    // Find the user in the user management system
+    User* user = userManager.findUser(username);
+    if (!user) {
+        std::cout << "User not found.\n";
+        return;}
+    else{
+        std::cout << "User found.\n";
+        }
+    // Get the book title from the user
+    std::string Title;
+    std::cout << "\nEnter the title of the book to borrow: ";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::getline(std::cin, Title);
+    // Find the book in the book database
+    Book* book = bookDb.findBookByTitle(Title);
+        if (!book) {
+            std::cout << "Book not found.\n";
+            return;
+        } else {
+            std::cout << "Book found.\n";
+            std::cout << "Title: " << book->getTitle() << "\n";
+            std::cout << "Would you like to borrow this book? (y/n): ";
+            char choice;
+            std::cin >> choice;
+            if (choice == 'y' || choice == 'Y') {
+                if (bookDb.borrowBook(book->getTitle(), username)) {
+                    std::cout << "Book borrowed successfully.\n";
+                } else {
+                    std::cout << "Failed to borrow the book.\n";
+                }
+            } else if (choice == 'n' || choice == 'N') {
+                std::cout << "Book not borrowed.\n";
+            } else {
+                std::cout << "Invalid choice.\n";
+            }
+        }
+    }
+
 
 void returnBook() {
     std::cout << "\nReturning a book...\n";
