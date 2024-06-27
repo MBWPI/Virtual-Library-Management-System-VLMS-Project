@@ -1,1122 +1,252 @@
-#include "functions.h"
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <sstream>
+#include "libraryOperations.h"
+#include "bookDatabase.h"
+#include "bst.h"
+#include "user.h"
+#include "userManagement.h"
+#include "utility.h"
+
 #include <algorithm>
+#include <fstream>
+#include <iostream>
+#include <limits>
+#include <string>
 
-void trim(std::string &str) {
-    size_t first = str.find_first_not_of(' ');
-    size_t last = str.find_last_not_of(' ');
-    if (first == std::string::npos || last == std::string::npos) {
-        str = "";
+void searchBooks() {
+  std::cout << "\nSearching for books...\n";
+
+  // Load the book database
+  BookDatabase bookDb;
+
+  // Insert books into a Binary Search Tree for efficient searching
+  BST bookTree;
+  for (const auto &book : bookDb.getAllBooks()) {
+    bookTree.insert(book);
+  }
+
+  // Get the search term from the user
+  std::string searchTitle;
+  std::cout << "\nEnter the title of the book to search: ";
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
+                  '\n'); // Clear any previous input
+  std::getline(std::cin, searchTitle);
+
+  // Search for the book in the BST
+  Book *foundBook = bookTree.search(searchTitle);
+  if (foundBook) {
+    std::cout << "\nBook found:\n";
+    std::cout << "Title: " << foundBook->getTitle() << "\n";
+    std::cout << "Author: " << foundBook->getAuthor() << "\n";
+    std::cout << "ISBN: " << foundBook->getISBN() << "\n";
+    std::cout << "Year: " << foundBook->getYear() << "\n";
+  } else {
+    std::cout << "Book not found.\n";
+  }
+}
+
+void borrowBook(UserManagement &&userManager, BookDatabase &&findBookByTitle) {
+  std::cout << "\nBorrowing a book...\n";
+  // Load the book database
+  BookDatabase bookDb;
+  // Get the username from the user
+  std::string username;
+  std::cout << "\nEnter your username: ";
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+  // Find the user in the user management system
+  User *user = userManager.findUser(username);
+  if (!user) {
+    std::cout << "User not found.\n";
+    return;
+  } else {
+    std::cout << "User found.\n";
+  }
+  // Get the book title from the user
+  std::string Title;
+  std::cout << "\nEnter the title of the book to borrow: ";
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  std::getline(std::cin, Title);
+  // Find the book in the book database
+  Book *book = bookDb.findBookByTitle(Title);
+  if (!book) {
+    std::cout << "Book not found.\n";
+    return;
+  } else {
+    std::cout << "Book found.\n";
+    std::cout << "Title: " << book->getTitle() << "\n";
+    std::cout << "Would you like to borrow this book? (y/n): ";
+    char choice;
+    std::cin >> choice;
+    if (choice == 'y' || choice == 'Y') {
+      if (bookDb.borrowBook(book->getTitle(), username)) {
+        std::cout << "Book borrowed successfully.\n";
+      } else {
+        std::cout << "Failed to borrow the book.\n";
+      }
+    } else if (choice == 'n' || choice == 'N') {
+      std::cout << "Book not borrowed.\n";
     } else {
-        str = str.substr(first, (last - first + 1));
+      std::cout << "Invalid choice.\n";
     }
+  }
 }
 
-// Struct to hold book information
-struct Book {
-    int id;
-    std::string title;
-    std::string author;
-    int pages;
-    std::string subject;
-    std::string genre;
-    int release_year;
-    std::string type;
-    std::string desc;
-    std::string renter;
-    bool rented;
-    // For sorting and comparison
-    bool operator<(const Book& other) const {
-        return title < other.title;
+bool BookDatabase::returnBook(const std::string &isbn,
+                              const std::string &username) {
+  auto &userBooks = borrowedBooks[username];
+  auto it = std::find_if(userBooks.begin(), userBooks.end(),
+                         [&](const Book &b) { return b.getISBN() == isbn; });
+  if (it != userBooks.end()) {
+    books.push_back(*it); // Add the book back to the library's collection
+    userBooks.erase(it);  // Remove the book from the user's borrowed books
+    saveBooksToFile("book_database.txt"); // Save changes to file
+    return true;
+  }
+  return false; // Book not found in user's borrowed books
+}
+void viewBorrowedBooks(const std::string &username) {
+  std::cout << "\nViewing borrowed books for user: " << username << "\n";
+
+  // Assuming borrowedBooks is a member variable of BookDatabase
+  BookDatabase bookDb;
+
+  // Get the borrowed books for the user
+  std::vector<Book> borrowedBooks = bookDb.getBorrowedBooks(username);
+
+  // Print borrowed books
+  if (!borrowedBooks.empty()) {
+    std::cout << "Borrowed Books:\n";
+    for (const auto &book : borrowedBooks) {
+      std::cout << "Title: " << book.getTitle() << "\n";
+      std::cout << "Author: " << book.getAuthor() << "\n";
+      std::cout << "ISBN: " << book.getISBN() << "\n";
+      std::cout << "Year: " << book.getYear() << "\n\n";
     }
-};
-
-// Function to parse a line from the file into a Book struct
-Book parseBookLine(const std::string& line) {
-    std::stringstream ss(line);
-    Book book;
-    std::string temp;
-
-    std::getline(ss, temp, '-'); // Ignore the initial -
-    ss >> book.id;
-    std::getline(ss, temp, '-'); // Ignore the -
-    std::getline(ss, book.title, '-');
-    std::getline(ss, book.author, '-');
-    ss >> book.pages;
-    std::getline(ss, temp, '-'); // Ignore the -
-    std::getline(ss, book.subject, '-');
-    std::getline(ss, book.genre, '-');
-    ss >> book.release_year;
-    std::getline(ss, temp, '-'); // Ignore the -
-    std::getline(ss, book.type, '-');
-    std::getline(ss, book.desc, '-');
-    std::getline(ss, book.renter, '-');
-    std::getline(ss, temp, '-'); // Ignore the -
-    std::string rented;
-    book.rented = (rented == "rented");
-    ss >> rented;
-
-    // Trim whitespace from each field
-    auto trim = [](std::string &str) {
-        size_t first = str.find_first_not_of(' ');
-        size_t last = str.find_last_not_of(' ');
-        if (first == std::string::npos || last == std::string::npos) {
-            str = "";
-        } else {
-            str = str.substr(first, (last - first + 1));
-        }
-    };
-
-    trim(book.title);
-    trim(book.author);
-    trim(book.subject);
-    trim(book.genre);
-    trim(book.type);
-    trim(book.desc);
-    trim(book.renter);
-
-    return book;
+  } else {
+    std::cout << "No books borrowed.\n";
+  }
 }
 
-// Function to perform binary search on a vector of books
-int Search(const std::vector<Book>& books, const std::string& title) {
-    int left = 0, right = books.size() - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        // Trim whitespace before comparison
-        std::string trimmedSearchTitle = title;
-        trim(trimmedSearchTitle); 
-        std::string trimmedBookTitle = books[mid].title; 
-        trim(trimmedBookTitle);
+void updateProfile(UserManagement &userManager) {
+  std::string username, oldPassword, newPassword;
 
-        if (trimmedBookTitle == trimmedSearchTitle) {
-            return mid;
-        } else if (trimmedBookTitle < trimmedSearchTitle) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return -1; // Book not found
+  std::cout << "\nUpdating profile...\n";
+  std::cout << "Enter your username: ";
+  std::cin >> username;
+
+  User *user = userManager.findUser(username);
+  if (!user) {
+    std::cout << "User not found.\n";
+    return;
+  }
+
+  std::cout << "Enter your old password: ";
+  std::cin >> oldPassword;
+
+  if (user->getPassword() != oldPassword) {
+    std::cout << "Incorrect password.\n";
+    return;
+  }
+
+  std::cout << "Enter new password: ";
+  std::cin >> newPassword;
+
+  userManager.updateUserProfile(username, newPassword);
 }
 
-// Allows the program to determine the id for next book
-std::string readLastLine(const std::string filename) {
-    std::ifstream file(filename);
-    std::string lastLine, line;
+void addBook() {
+  std::cout << "\nAdding a book...\n";
+  // Implement add book logic
+  std::string title, author, isbn;
+  int year;
 
-    while (std::getline(file, line)) {
-        lastLine = line;
-    }
-    return lastLine;
+  std::cout << "Enter the title of the book: ";
+  std::cin.ignore();
+  std::getline(std::cin, title);
+  std::cout << "Enter the author of the book: ";
+  std::getline(std::cin, author);
+  std::cout << "Enter the ISBN of the book: ";
+  std::getline(std::cin, isbn);
+  std::cout << "Enter the year of publication: ";
+  std::cin >> year;
+
+  Book book(title, author, isbn, year);
+  BookDatabase bookDb;
+  bookDb.addBook(book);
+  std::cout << "Book added successfully.\n";
 }
 
-// Searches for a book and stores book into a usable vector
-std::vector<Book> searchBooks(std::string filename, std::string bookTitle) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open the file." << std::endl;
-        return {}; // Return an empty vector if file opening fails
-    }
+void removeBook() {
+  std::string isbn;
+  std::cout << "Enter the ISBN of the book to remove: ";
+  std::cin.ignore();
+  std::getline(std::cin, isbn);
 
-    std::vector<Book> books;
-    std::string line;
-
-    //ignores empty space
-    while (std::getline(file, line)) {
-        if (!line.empty()) {
-            books.push_back(parseBookLine(line));
-        }
-    }
-
-    file.close();
-
-    // Sort the books by title for binary search
-    std::sort(books.begin(), books.end());
-
-    std::string searchTitle = bookTitle;
-    // Trim the searchTitle to remove leading/trailing whitespace
-    auto trim = [](std::string &str) {
-        size_t first = str.find_first_not_of(' ');
-        size_t last = str.find_last_not_of(' ');
-        if (first == std::string::npos || last == std::string::npos) {
-            str = "";
-        } else {
-            str = str.substr(first, (last - first + 1));
-        }
-    };
-
-    // trims the searchtitle
-    trim(searchTitle);
-
-    // Add a space to the beginning and end of the searchTitle
-    searchTitle = " " + searchTitle + " ";
-
-    std::vector<Book> foundBooks;
-
-    int index = Search(books, searchTitle);
-
-    if (index != -1) {
-        // Correctly handle reading the previous line
-        if (index > 0) {
-            index--;
-        }
-        const Book& foundBook = books[index];
-        foundBooks.push_back(foundBook);
-    }
-
-    return foundBooks;
+  BookDatabase bookDb;
+  bookDb.removeBook(isbn);
+  std::cout << "Book removed successfully.\n";
 }
 
-// Enables admins to add books
-void addBook(std::string book_title, std::string book_type,std::string book_subject,std::string book_desc,std::string book_genre,std::string book_author,std::string book_page_count,std::string book_release_year) {
+void updateBookInfo() {
+  std::cout << "\nUpdating book information...\n";
+  // Implement update book info logic
+  std::string title, author, isbn;
+  int year;
 
-    std::fstream book_database("database/book_database.txt");
-    int book_id, rented = 0; // default for rented is 0 / false
-    std::string renter = ""; //default for renter is ""
+  std::cout << "Enter the ISBN of the book to update: ";
+  std::cin.ignore();
+  std::getline(std::cin, isbn);
+  std::cout << "Enter the new title of the book: ";
+  std::getline(std::cin, title);
+  std::cout << "Enter the new author of the book: ";
+  std::getline(std::cin, author);
+  std::cout << "Enter the new year of publication: ";
+  std::cin >> year;
 
-    int counter = 0;
-    if (book_database.is_open()) { //checks last line and grabs data of the last book added
-        
-        std::string last_line = readLastLine("database/book_database.txt"); //grabs last line and stores it in to var
-        std::getline(book_database, last_line);
-        std::vector<std::string> last_book_entered;
-        std::stringstream ss(readLastLine("database/book_database.txt"));
-        std::string token;
-
-
-        while(getline(ss, token, '-')) {  //stores each line minus the '-' into an array
-            token.erase(0, token.find_first_not_of(" ")); // Trim leading spaces
-            token.erase(token.find_last_not_of(" ") + 1); // Trim trailing spaces
-            last_book_entered.push_back(token);    
-            counter++;            
-        }
-
-        book_id = stoi(last_book_entered[1]); // adds 1 to book id
-        book_id++;
-        std::string lbreak = " - ";
-        book_database.close();
-        std::fstream book_database;
-        book_database.open("database/book_database.txt", std::ios::app);
-        book_database << "\n- " << book_id << lbreak  << book_title << lbreak << book_author << lbreak << book_page_count << lbreak << book_subject << lbreak << book_genre << lbreak << book_release_year << lbreak << book_type << lbreak << book_desc << lbreak  << "renter" << lbreak << rented << lbreak;  
-        book_database.close();
-        std::cout << "\nAdding a book...\n";
-        std::cout << "Book ID: " <<  book_id << std::endl << "Book Title: " << last_book_entered[1] << std::endl << "Book Author: " << book_author << std::endl << "Page Count: " << book_page_count << std::endl << "Subject: " << book_subject << std::endl << "Genre: " << book_genre << std::endl << "Release Year: " << book_release_year << std::endl << "Format: " << book_type << "Book Desc:" << book_desc << std::endl;    
-    }else {
-        std::cout << "error";
-    }
-
-
+  Book book(title, author, isbn, year);
+  BookDatabase bookDb;
+  bookDb.updateBook(book);
+  std::cout << "Book information updated successfully.\n";
 }
 
-// allows admins to remove books
-void removeBook(std::string filename, std::string bookTitle) {
-    std::cout << "\nRemoving a book...\n";
-    std::ifstream inputFile(filename);
-
-    if (!inputFile.is_open()) { // checks if file is open
-        std::cerr << "Failed to open the file." << std::endl;
-        return;
-    }
-
-    std::string tempFilename = "database/temp_file/temp.txt"; // creates temp file
-    std::ofstream tempFile(tempFilename);
-
-    if(!tempFile.is_open()) { //checks if temp file is open
-        std::cerr << "Failed to open temp file." << std::endl;
-        return;
-    }
-
-    std::string line;
-    std::string searchTitle = " " + bookTitle + " ";
-    bool bookFound = false;
-
-    while(std::getline(inputFile, line)) {
-        if(line.find(searchTitle) != std::string::npos) {
-            bookFound = true;
-            continue;
-        }
-        // Check if this line is not empty
-        if (!line.empty()) {
-            // Write the line to the temporary file
-            tempFile << line << std::endl;
-        }
-    }
-
-    inputFile.close();
-    tempFile.close();
-
-    if(bookFound) {
-        if(std::remove(filename.c_str()) != 0) {
-            std::cerr << "Error deleting the original file." << std::endl;
-            return;
-        }
-        if(std::rename(tempFilename.c_str(), filename.c_str()) != 0) {
-            std::cerr << "Error renaming the temporary file." << std::endl;
-        }
-        std::cout << "Book Deleted successfully." << std::endl;
-    }else {
-        std::cout << "Book not found" << std::endl;
-        std::remove(tempFilename.c_str());
-    }
+void viewAllLoans() {
+  std::cout << "\nViewing all loans...\n";
+  // Implement view all loans logic
 }
 
-void updateBookInfo(std::string filename, Book updatedBook) { // allows admins to updatebookinfo
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open the file." << std::endl;
-        return;
-    }
-
-    std::vector<Book> books;
-    std::string line;
-
-    while (std::getline(file, line)) {
-        if (!line.empty()) {
-            books.push_back(parseBookLine(line));
-        }
-    }
-
-    file.close();
-
-    // Find and update the book
-    bool bookFound = false;
-    for (auto& book : books) {
-        if (book.id == updatedBook.id) {
-            book = updatedBook;
-            bookFound = true;
-            break;
-        }
-    }
-
-    if (!bookFound) {
-        std::cerr << "Book with ID " << updatedBook.id << " not found." << std::endl;
-        return;
-    }
-
-    // Write the updated books back to the file, ignoring blank lines
-    std::ofstream outFile(filename);
-    if (!outFile.is_open()) {
-        std::cerr << "Failed to open the file for writing." << std::endl;
-        return;
-    }
-
-    for (const auto& book : books) {
-        outFile << "- " << book.id << " - " << book.title << " - " << book.author << " - " << book.pages << " - "<< book.subject << " - " << book.genre << " - " << book.release_year << " - " << book.type << " - "<< book.desc << " - " << book.renter << " - "  << (book.rented ? "rented" : "not rented") <<" - " << std::endl;
-    }
-
-    outFile.close();
+void LibraryOperations::borrowBook(const Book &book) {
+  borrowedBooks.push(book);
 }
 
-void updateBook(std::string filename, std::string BookToUpdate) { // ui for updating a book
-    std::cout << "\nUpdating book information...\n";
-
-    std::vector<Book> result = searchBooks(filename, BookToUpdate);
-    Book& Found_Book = result[0];
-    
-    // Check if any books were found
-    if (!result.empty()) {
-        std::cout << "Books to Update:" << std::endl;
-        for (const auto& book : result) {
-            // Access and use the data of each found book
-            std::cout << "Title: " << book.title << std::endl;
-            std::cout << "Author: " << book.author << std::endl;
-            std::cout << "Pages: " << book.pages << std::endl;
-            std::cout << "Subject: " << book.subject << std::endl;
-            std::cout << "Genre: " << book.genre << std::endl;
-            std::cout <<"Release Year: " << book.release_year << std::endl;
-            std::cout << "Type: " << book.type << std::endl;
-            std::cout << "Desc: " << book.desc << std::endl;
-        }
-    }
-
-    // no idea how to convert the array to be able to use result[1], result[2]
-    std::string y_n = " ";
-    std::cout << "Would you like to update title:  " << Found_Book.title << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        Found_Book.title = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-    }
-
-    std::cout << "Would you like to update author: " << Found_Book.author << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        Found_Book.author = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    }
-
-    y_n = " ";
-    int int_update;
-    std::cout << "Would you like to update pages: " << Found_Book.pages << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::cout << "Update to: ";
-        std::cin >> int_update;
-        Found_Book.pages = int_update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    }
-
-    y_n = " ";
-    std::cout << "Would you like to update subject: " << Found_Book.subject << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        Found_Book.subject = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    } 
-
-    y_n = " ";
-    std::cout << "Would you like to update genre: " << Found_Book.genre << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        Found_Book.genre = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    }   
-
-    y_n = " ";
-    std::cout << "Would you like to update release year: " << Found_Book.release_year << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        Found_Book.release_year = int_update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    }  
-    
-    y_n = " ";
-    std::cout << "Would you like to update book type: " << Found_Book.type << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        Found_Book.type = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    } 
-
-    y_n = " ";
-    std::cout << "Would you like to update desc: " << Found_Book.desc << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        Found_Book.desc = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    } 
-
-    updateBookInfo(filename, Found_Book);
-
-    std::cout << "Book Information Update Successfully!\n";
+void LibraryOperations::returnBook() {
+  if (!borrowedBooks.empty()) {
+    borrowedBooks.pop();
+  }
 }
 
-void borrowBook(std::string filename, std::string loggedInUser) { 
-    std::string confirmBorrow;
-    bool confirmBorrow_bool;
-    std::string bookTitle;
-    std::cout << "Enter a book: ";
-    std::cin >> bookTitle;
-    
-    std::vector<Book> result = searchBooks(filename, bookTitle);
-    Book& Found_Book = result[0];
-    
-    if (Found_Book.renter != ""){
-        std::cout << "Do you want to borrow this book (Yes/No): " ;
-        std::cin >> confirmBorrow;
-        if (confirmBorrow == "Yes" || confirmBorrow == "yes") {
-            confirmBorrow_bool = 1;
-        }else {
-            confirmBorrow_bool = 0;
-        }
-        std::cout << "\nBorrowing a book...\n";
-    
-        if (confirmBorrow_bool == true){
-            Found_Book.rented = true;
-            Found_Book.renter = loggedInUser;
-
-            updateBookInfo(filename, Found_Book);
-        }else{
-            std::cout << "Error" << std::endl;
-        }        
-    }else{
-        std::cout << "Book has already been borrowed";
-    }
+Book *LibraryOperations::getNextBorrowedBook() {
+  if (!borrowedBooks.empty()) {
+    return &borrowedBooks.front();
+  }
+  return nullptr;
 }
 
-bool checkIfBookRented(std::string filename, std::string book) {
-    std::vector<Book> result = searchBooks(filename, book);
-
-    std::cout << result[0].rented << " " << result[0].renter << std::endl;
-
-    return false;
+// Data Persistence in Book Management
+void LibraryOperations::saveBooksToFile(const std::string &filename) {
+  std::ofstream file(filename);
+  if (!file.is_open()) {
+    std::cerr << "Failed to open file for writing: " << filename << std::endl;
+    return;
+  }
+  // Serialize book data
+  file.close();
 }
 
-// Struct to hold user information
-struct user {
-    int id;
-    std::string username;
-    std::string password;
-    std::string fullName;
-    std::string dob;
-
-    // For sorting and comparison
-    bool operator<(const user& other) const {
-        return username < other.username;
-    }
-};
-
-// Function to parse a line from the file into a user struct
-user parseUserLine(const std::string& line) {
-    std::stringstream ss(line);
-    user  users;
-    std::string temp;
-
-    std::getline(ss, temp, '-'); // Ignore the initial -
-    ss >> users.id;
-    std::getline(ss, temp, '-'); // Ignore the -
-    std::getline(ss, users.username, '-');
-    std::getline(ss, users.password, '-');
-    std::getline(ss, users.fullName, '-');
-    std::getline(ss, users.dob, '-');
-
-    // Trim whitespace from each field
-    auto trim = [](std::string &str) {
-        size_t first = str.find_first_not_of(' ');
-        size_t last = str.find_last_not_of(' ');
-        if (first == std::string::npos || last == std::string::npos) {
-            str = "";
-        } else {
-            str = str.substr(first, (last - first + 1));
-        }
-    };
-
-    trim(users.username);
-    trim(users.password);
-    trim(users.fullName);
-    trim(users.dob);
-
-    return users;
-}
-
-// Function to perform binary search on a vector of users
-int SearchUs(const std::vector<user>& user, const std::string& title) {
-    int left = 0, right = user.size() - 1;
-    while (left <= right) {
-        int mid = left + (right - left) / 2;
-        // Trim whitespace before comparison
-        std::string trimmedSearchTitle = title;
-        trim(trimmedSearchTitle); 
-        std::string trimmedBookTitle = user[mid].username; 
-        trim(trimmedBookTitle);
-
-        if (trimmedBookTitle == trimmedSearchTitle) {
-            return mid;
-        } else if (trimmedBookTitle < trimmedSearchTitle) {
-            left = mid + 1;
-        } else {
-            right = mid - 1;
-        }
-    }
-    return -1; // users not found
-}
-
-std::vector<user> searchUsers(std::string filename, std::string logged_in_user) {
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open the file." << std::endl;
-        return {}; // Return an empty vector if file opening fails
-    }
-
-    std::vector<user> users;
-    std::string line;
-
-    while (std::getline(file, line)) {
-        if (!line.empty()) {
-            users.push_back(parseUserLine(line));
-        }
-    }
-
-    file.close();
-
-    // Sort the users by title for binary search
-    std::sort(users.begin(), users.end());
-
-    std::string searchTitle = logged_in_user;
-    // Trim the searchTitle to remove leading/trailing whitespace
-    auto trim = [](std::string &str) {
-        size_t first = str.find_first_not_of(' ');
-        size_t last = str.find_last_not_of(' ');
-        if (first == std::string::npos || last == std::string::npos) {
-            str = "";
-        } else {
-            str = str.substr(first, (last - first + 1));
-        }
-    };
-
-    trim(searchTitle);
-
-    // Add a space to the beginning and end of the searchTitle
-    searchTitle = " " + searchTitle + " ";
-
-    std::vector<user> foundBooks;
-
-    int index = SearchUs(users, searchTitle);
-
-    if (index != -1) {
-        // Correctly handle reading the previous line
-        if (index > 0) {
-            index--;
-        }
-        const user& founduser = users[index];
-        foundBooks.push_back(founduser);
-    } else {
-        std::cerr << "Username does not exist" << std::endl;
-    }
-
-    return foundBooks;
-}
-
-bool searchUsersExist(std::string filename, std::string logged_in_user) { // stops frtom mutiple users being entered under the same name
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open the file." << std::endl;
-        return false;
-    }
-
-    std::vector<user> users;
-    std::string line;
-
-    while (std::getline(file, line)) {
-        if (!line.empty()) {
-            users.push_back(parseUserLine(line));
-        }
-    }
-
-    file.close();
-
-    // Sort the users by username for binary search
-    std::sort(users.begin(), users.end());
-
-    auto trim = [](std::string &str) {
-        size_t first = str.find_first_not_of(' ');
-        size_t last = str.find_last_not_of(' ');
-        if (first == std::string::npos || last == std::string::npos) {
-            str = "";
-        } else {
-            str = str.substr(first, (last - first + 1));
-        }
-    };
-
-    std::string searchUsername = logged_in_user;
-    trim(searchUsername);
-
-    user searchUser{0, searchUsername, "", "", ""};
-
-    // Binary search to check if the username exists in the sorted list
-    bool found = std::binary_search(users.begin(), users.end(), searchUser);
-
-    return found;
-}
-
-void updateProfileInfo(std::string filename, user updatedUser) { //allows admins to update user info, or users
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open the file." << std::endl;
-        return;
-    }
-
-    std::vector<user> users;
-    std::string line;
-
-    while (std::getline(file, line)) {
-        if (!line.empty()) {
-            users.push_back(parseUserLine(line));
-        }
-    }
-
-    file.close();
-
-    // Find and update the user
-    bool userFound = false;
-    for (auto& user : users) {
-        if (user.id == updatedUser.id) {
-            user = updatedUser;
-            userFound = true;
-            break;
-        }
-    }
-
-    if (!userFound) {
-        std::cerr << "Book with ID " << updatedUser.id << " not found." << std::endl;
-        return;
-    }
-
-    // Write the updated books back to the file, ignoring blank lines
-    std::ofstream outFile(filename);
-    if (!outFile.is_open()) {
-        std::cerr << "Failed to open the file for writing." << std::endl;
-        return;
-    }
-
-    for (const auto& user : users) {
-        outFile << "- " << user.id << " - " << user.username << " - " << user.password << " - " << user.fullName << " - " << user.dob << " - " << std::endl;
-    }
-
-    outFile.close();
-}
-
-void updateUser(std::string filename, std::string loggedInUser) { //ui for updateuser
-    std::cout << "\nUpdating user information...\n";
-
-    std::vector<user> result = searchUsers(filename, loggedInUser);
-    user& userFound = result[0];
-    
-    // Check if any user were found
-    if (!result.empty()) {
-        std::cout << "USer to Update:" << std::endl;
-        for (const auto& user : result) {
-            // Access and use the data of each found book
-            std::cout << "Username: " << user.username << std::endl;
-            std::cout << "Password: " << user.password << std::endl;
-            std::cout << "Full Name: " << user.fullName << std::endl;
-            std::cout << "Date Of Birth: " << user.dob << std::endl;
-        }
-    }
-
-    std::string y_n = " ";
-    std::cout << "Would you like to update username:  " << userFound.username << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        userFound.username = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-    }
-
-    std::cout << "Would you like to update password: " << userFound.password << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        userFound.password = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    }
-
-    std::cout << "Would you like to update full name: " << userFound.fullName << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        userFound.fullName = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    }
-
-    std::cout << "Would you like to update full name: " << userFound.dob << "? <Y/N> ";
-    std::cin >> y_n;
-    if(y_n == "Y" || y_n == "y") {
-        std::string update;
-        std::cout << "Update to: ";
-        std::cin.ignore();
-        std::getline(std::cin, update);
-        userFound.dob = update;
-        std:: cout << std::endl;
-    }else if (y_n == "n" || y_n == "N") {
-        std::cout << "No Update.\n";
-    } else {
-        std::cout << "Invalid Input!";
-        std:: cout << std::endl;
-    }
-
-    updateProfileInfo(filename, userFound);
-
-    std::cout << "User Information Update Successfully!\n";
-}
-
-void regUser(std::string username, std::string password, std::string fullName, std::string birthDate) { // adds users
-
-    std::fstream user_database("database/user_data.txt");
-    int user_id;
-
-    if (user_database.is_open()) { //checks last line and grabs data of the last user added
-        
-        std::string last_line = readLastLine("database/user_data.txt"); //grabs last line and stores it in to var
-        std::getline(user_database, last_line);
-        std::vector<std::string> last_book_entered;
-        std::stringstream ss(readLastLine("database/user_data.txt"));
-        std::string token;
-
-        int counter = 0;
-        while(getline(ss, token, '-')) {  //stores each line minus the '-' into an array
-            token.erase(0, token.find_first_not_of(" ")); // Trim leading spaces
-            token.erase(token.find_last_not_of(" ") + 1); // Trim trailing spaces
-            last_book_entered.push_back(token);    
-            counter++;            
-        }
-
-        user_id = stoi(last_book_entered[1]); // adds 1 to user id
-        user_id++;
-        std::string lbreak = " - ";
-        user_database.close();
-        std::fstream book_database;
-        book_database.open("database/user_data.txt", std::ios::app);
-        book_database << "\n- " << user_id << lbreak << username << lbreak << password << lbreak << fullName << lbreak << birthDate << lbreak;
-        book_database.close();
-    }else {
-        std::cout << "error";
-    }
-
-
-}
-
-void signUp(std::string username, std::string password, std::string fullName, std::string birthDate) { // signup function (no integrated ui)
-    
-    int loop = 0;
-    std::string newUsername = username;
-    while(loop == 0) {
-        if (searchUsersExist("database/user_data.txt", newUsername) == true) {
-            std::cout << "Error: Username already taken. Try again!" << std::endl;
-            std::cout << "Enter New Username: ";
-            std::getline(std::cin, newUsername);
-        } else {
-            std::cout << "Registered!" << std::endl;
-            regUser(newUsername, password, fullName, birthDate);
-            loop = 1;
-        }
-    }
-
-}
-
-std::string logIn() { // login users
-    int loop = 0;
-    std::string username;
-    std::string password;
-
-   while(loop == 0) {  
-        std::cout << "\nUsername: "; //gets username and password
-        std::getline(std::cin, username);
-        std::cout << "\nPassword: ";
-        std::cin >> password;
-    
-        if (searchUsersExist("database/user_data.txt", username) == false ){ //checks to see if user exisits and if == false error
-            std::cout << "Error: User Does not Exisit";
-        }else {
-        
-            std::vector<user> result = searchUsers("database/user_data.txt", username); //searches for username 
-            if (username == result[0].username && password == result[0].password) { // checks if username is equal to password
-                std::cout << "\nLogged In!" << std::endl;
-                loop = 1; // closes loop
-                return username; // return username for logged_in_user
-            }else {
-                std::cout << "\nLoggin Failed" << std::endl; // failed
-            }
-        }
-    }
-    return username; // return username
-}
-
-bool isAdminTxt(std::string filename, std::string logged_in_user) { // checks if admin is in admin .txt file
-    std::ifstream file(filename);
-    if (!file.is_open()) {
-        std::cerr << "Failed to open the file." << std::endl;
-        return false;
-    }
-
-    int offset;
-    std::string line;
-    
-    while (!file.eof()) { // searches each line of the file
-        std::getline(file, line); // gets the line, format is simple its just a username
-        if ((offset = line.find(logged_in_user, 0)) != std::string::npos) { // checks if username is in that line
-            file.close(); // if true close and return true
-            return true;
-        } else {
-            return false; // if false return false
-        }
-    }
-
-    return false; // default false
-}
-
-bool isAdminVector(std::string logged_in_user, std::vector<std::string> adminList) { // same as isAdminTxt, although uses a hardcoded vector
-    if (std::find(adminList.begin(), adminList.end(), logged_in_user) != adminList.end()) {
-        return true;
-    }else {
-        return false;
-    }
-
-    return false;
-}
-
-void removeUser(std::string filename, std::string user) { // allows admins to remove users
-    std::ifstream inputFile(filename);
-
-    if (!inputFile.is_open()) { // opens user database
-        std::cerr << "Failed to open the file." << std::endl;
-        return;
-    }
-
-    std::string tempFilename = "database/temp_file/temp.txt"; // opens a temp file
-    std::ofstream tempFile(tempFilename);
-
-    if(!tempFile.is_open()) {
-        std::cerr << "Failed to open temp file." << std::endl;
-        return;
-    }
-
-    std::string line;
-    std::string searchUser = " " + user + " ";
-    bool userFound = false;
-
-    while(std::getline(inputFile, line)) { // grabs line
-        if(line.find(searchUser) != std::string::npos) { // checks for user
-            userFound = true;
-            continue;
-        }
-        // Check if this line is not empty
-        if (!line.empty()) {
-            // Write the line to the temporary file
-            tempFile << line << std::endl;
-        }
-    }
-
-    inputFile.close();
-    tempFile.close();
-
-    if(userFound) { // if user is found, delete user
-        if(std::remove(filename.c_str()) != 0) {
-            std::cerr << "Error deleting the original file." << std::endl;
-            return;
-        }
-        if(std::rename(tempFilename.c_str(), filename.c_str()) != 0) {
-            std::cerr << "Error renaming the temporary file." << std::endl;
-        }
-        std::cout << "User Deleted successfully." << std::endl;
-    }else {
-        std::cout << "User not found" << std::endl;
-        std::remove(tempFilename.c_str());
-    }
-}
-
-static const std::vector<std::string> admins = { "esting2" , " "}; // admin vector
-
-void adminRemoveUser(std::string filename, std::string logged_in_user, std::string check_admin_type, std::string userToDelete) { // ui for remove user
-    if (check_admin_type == "Text") {
-        if(isAdminTxt("database/admin_users.txt", logged_in_user) == true) {
-            removeUser(filename, userToDelete);
-        }else {
-            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
-        }
-    }else if (check_admin_type == "Vector") {
-        if(isAdminVector(filename, admins) == true) {
-            removeUser(filename, userToDelete);
-        }else {
-            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
-        }
-    } else {
-        std::cerr << "Invalid Check Type: Try again with 'Text' or 'Vector'" << std::endl;
-    }
-
-
-}
-
-void adminUpdateUser(std::string filename, std::string logged_in_user, std::string check_admin_type, std::string userToUpdate) { // ui for admin update user
-    if (check_admin_type == "Text") {
-        if(isAdminTxt("database/admin_users.txt", logged_in_user) == true) {
-            updateUser(filename, userToUpdate);
-        }else {
-            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
-        }
-    }else if (check_admin_type == "Vector") {
-        if(isAdminVector(filename, admins) == true) {
-            updateUser(filename, userToUpdate);
-        }else {
-            std::cerr << "Error: Invalid User --- No Permission" << std::endl;
-        }
-    } else {
-        std::cerr << "Invalid Check Type: Try again with 'Text' or 'Vector'" << std::endl;
-    }
-
-
-}
-
-void viewAllLoan(std::string filename) { // viewAllLoans spits out any book that is rented
-    std::ifstream file(filename);
-    std::string line;
-
-    if (file.is_open()) {
-        while (std::getline(file, line)) { // get line
-            if (line.find("- rented -") != std::string::npos) { // looks for '- rented -'
-                std::cout << line << std::endl; // prints line
-            }
-        }
-        file.close();
-    } else {
-        std::cerr << "Unable to open file: " << filename << std::endl;
-    }
-}
-
-void returnBook(std::string filename, std::string loggedInUser) { 
-    std::string bookTitle, confirmReturnAsk;
-    bool confirmReturn;
-    
-    bool confirmBorrow;
-    
-    std::cout << "Enter the book you'd like to return: ";
-    std::cin >> bookTitle;
-    
-    std::vector<Book> result = searchBooks(filename, bookTitle);
-    Book& Found_Book = result[0];
-    std::string borrowedUser = result[0].renter;
-    std::cout << "\nReturning a book...\n";
-   // if (loggedInUser == result[0].renter){
-        std::cout << "Do you want to return this book (Yes/No) ";
-            
-        std::cin >> confirmReturnAsk;
-            
-        if(confirmReturnAsk == "Yes" || confirmReturnAsk == "yes"){
-            Found_Book.rented = false;
-            Found_Book.renter = "";
-            updateBookInfo(filename, Found_Book);
-        }
-   // }else{
-   //     std::cout << "Error" << std::endl;
-   // }
-}
-
-void viewBorrowedBooks(std::string filename, std::string logged_in_user) { // allows users viee their borrowed books
-    std::ifstream file(filename);
-    std::string line;
-
-    if (file.is_open()) { // if file open
-        std::vector<Book> borrowedBooks; // borrowed book
-        while (std::getline(file, line)) {
-            if (!line.empty()) { // if line is not empty
-                Book book = parseBookLine(line); // grab line
-                if (book.renter == logged_in_user) { // check if renter is equal to logged in user
-                    borrowedBooks.push_back(book); // push to borrowedBooks
-                }
-            }
-        }
-        file.close();
-
-        if (borrowedBooks.empty()) { // if non found
-            std::cout << "No books borrowed by " << logged_in_user << ".\n";
-        } else { // else (if found)
-            std::cout << "Books borrowed by " << logged_in_user << ":\n"; // go through each book and print the information
-            for (const auto& book : borrowedBooks) {
-                std::cout << "ID: " << book.id;
-                std::cout << "\nTitle: " << book.title;
-                std::cout << "\n Author: " << book.author << ", Pages: " << book.pages;
-                std::cout << "\n Subject: " << book.subject << ", Genre: " << book.genre; 
-                std::cout << "\n Release Year: " << book.release_year; 
-                std::cout << "\n Type: " << book.type << ", Description: " << book.desc << std::endl;
-            }
-        }
-    } else {
-        std::cerr << "Unable to open file: " << filename << std::endl;
-    }
-}
-
-void viewAllLoans(std::string filename, std::string logged_in_user, std::string admin_check_type, std::string admin_file) { // views all the loans for admin (ui)
-
-    if (admin_check_type == "Text" || admin_check_type == "txt" || admin_check_type == "text") {
-        bool admin_status = isAdminTxt(admin_file, logged_in_user);
-        if (admin_status == true) {
-            viewAllLoan(filename);
-        }else {
-            std::cout << "Not Admin!";
-        }
-    }else if(admin_check_type == "Vector" || admin_check_type == "vector") {
-        bool admin_status = isAdminVector(logged_in_user, admins);
-        if (admin_status == true) {
-            viewAllLoan(filename);
-        }else {
-            std::cout << "Not Admin!";
-        }
-    } else {
-        std::cerr << "Unable to open file";
-    }
+void LibraryOperations::loadBooksFromFile(const std::string &filename) {
+  std::ifstream file(filename);
+  if (!file.is_open()) {
+    std::cerr << "Failed to open file for reading: " << filename << std::endl;
+    return;
+  }
+  // Deserialize book data
+  file.close();
 }
