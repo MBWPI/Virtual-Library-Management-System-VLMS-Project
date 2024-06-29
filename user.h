@@ -5,31 +5,27 @@
 #include <unordered_map>
 
 
-// Rachel Georges - User Account Management
+// User Account Management team (Rachel Georges) work implemented here
 
 class User{
+    public:
+        User();
+        User(const std::string &u, const std::string &p, const std::string &r = "");
+        std::string getUsername() const;
+        std::string getPassword() const;
+        std::string getRole() const;
+        std::string getName() const;
+        // Other getters and setters
     private:
         std::string username;
         std::string password;
         std::string role;
-    public:
-        User();
-        User(std::string u, std::string p, std::string r);
-        std::string getName() const {
-            return username;
-        } // gets stored name for the user and provides it.
-        std::string getPassword() const {
-            return password;
-        } // gets stored password for the user and provides it.
-        std::string getRole() const {
-            return role;
-        } // gets stored role for the user and provides it.
 };
 
 class Users{
     private:
         std::unordered_map<std::string, User> userMap; //creates hash mapping key, value pairs to create database.
-       
+
     public:
         Users() {}
 
@@ -44,7 +40,7 @@ class Users{
             }
             return false;
         }
-                
+
         const User& getUser(const std::string& userName) const { // Changed return type to User&
             return userMap.at(userName);
         }

@@ -1,1 +1,20 @@
-- Book Title - Book Author - Book Pages - Book Subject - Book Genre - Book Release Year - Book Type - Book Desc - 1 - rented - renter
+The Great Gatsby,F. Scott Fitzgerald,9780743273565,1925,1
+To Kill a Mockingbird,Harper Lee,9780060935467,1960,1
+1984,George Orwell,9780451524935,1949,1
+Pride and Prejudice,Jane Austen,9780141040349,1813,1
+The Catcher in the Rye,J.D. Salinger,9780316769488,1951,1
+The Hobbit,J.R.R. Tolkien,9780345339683,1937,1
+Moby Dick,Herman Melville,9781503280786,1851,1
+War and Peace,Leo Tolstoy,9780199232765,1869,1
+The Odyssey,Homer,9780140268867,-800,1
+Crime and Punishment,Fyodor Dostoevsky,9780143058144,1866,1
+Brave New World,Aldous Huxley,9780060850524,1932,1
+The Divine Comedy,Dante Alighieri,9780142437223,1320,1
+The Brothers Karamazov,Fyodor Dostoevsky,9780374528379,1880,1
+Great Expectations,Charles Dickens,9780141040363,1861,1
+Jane Eyre,Charlotte Bronte,9780142437209,1847,1
+The Iliad,Homer,9780140275360,-750,1
+Wuthering Heights,Emily Bronte,9780141439556,1847,1
+Catch-22,Joseph Heller,9781451626650,1961,1
+The Grapes of Wrath,John Steinbeck,9780143039433,1939,1
+The Lord of the Rings,J.R.R. Tolkien,1547623589654,1954,1
