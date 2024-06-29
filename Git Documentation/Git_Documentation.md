@@ -43,6 +43,9 @@
 5. **`git commit -m 'Testing Information commit'`**
    - We used this to commit the "Testing" folder with the testing information done mostly by the Testing team (Fadi Kanana).
 
+6. **`git commit -m 'Unit Testing Information commit'`**
+   - We used this to commit the unit testing done by the Book Management team and the User Account Management team.
+
 ## Technical Requirements
 
 **Version Control with Git:**
