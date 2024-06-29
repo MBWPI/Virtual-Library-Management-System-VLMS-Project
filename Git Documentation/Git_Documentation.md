@@ -39,6 +39,9 @@
    
 4. **`git commit -m 'Create User Manual'`**
    - We used this to commit the User Manual to inform users how to use the program.
+   
+5. **`git commit -m 'Testing Information commit'`**
+   - We used this to commit the "Testing" folder with the testing information done mostly by the Testing team (Fadi Kanana).
 
 ## Technical Requirements
 
