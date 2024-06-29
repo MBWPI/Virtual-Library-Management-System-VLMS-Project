@@ -34,8 +34,11 @@
 2. **`git commit -m 'Git Documentation commit'`**
    - We used this to commit all of the Git commands documentation for commands used in this project.
    
-3. **`git commit -m 'Git README commit'`**
+3. **`git commit -m 'Create README.md'`**
    - We used this to commit the README which contains information about this project.
+   
+4. **`git commit -m 'Create User Manual'`**
+   - We used this to commit the User Manual to inform users how to use the program.
 
 ## Technical Requirements
 
