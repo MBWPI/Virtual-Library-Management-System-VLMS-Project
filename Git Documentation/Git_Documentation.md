@@ -24,6 +24,19 @@
 7. **`git push origin Version-4`**
    - This command is used to push the committed changes to the specified branch on the remote repository. We used this to push the initial commit to the  current group project branch on the GitHub repository.
 
+## Git Commit Messages
+
+**Used Meaningful Commit Messages**
+
+1. **`git commit -m 'Initial commit'`**
+   - This command is used to commit the staged changes with a descriptive message. We used this to make the initial commit of all the files in the  group project folder.
+   
+2. **`git commit -m 'Git Documentation commit'`**
+   - We used this to commit all of the Git commands documentation for commands used in this project.
+   
+3. **`git commit -m 'Git README commit'`**
+   - We used this to commit the README which contains information about this project.
+
 ## Technical Requirements
 
 **Version Control with Git:**
